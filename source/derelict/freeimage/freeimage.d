@@ -55,7 +55,10 @@ class DerelictFILoader : SharedLibLoader {
         override void loadSymbols() {
             // work-around: names in FreeImage.dll are stdcall-mangled on Windows
             void myBindFunc( Func )( ref Func f, string unmangledName ) {
-                static if( Derelict_OS_Windows ) {
+                version( Win64 ) enum isWin64 = true;
+                else enum isWin64 = false;
+
+                static if( Derelict_OS_Windows && !isWin64 ) {
                     import std.typecons;
                     import std.string;
                     import std.typecons;
