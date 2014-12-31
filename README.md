@@ -14,7 +14,7 @@ void main() {
     // Load the FreeImagee library.
     DerelictFI.load();
 
-    // Now FreeType functions can be called.
+    // Now FreeImage functions can be called.
     ...
 }
 ```
