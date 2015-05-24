@@ -296,14 +296,20 @@ class DerelictFILoader : SharedLibLoader {
         myBindFunc( FreeImage_GetMetadataCount, "FreeImage_GetMetadataCount" );
         myBindFunc( FreeImage_CloneMetadata, "FreeImage_CloneMetadata" );
         myBindFunc( FreeImage_TagToString, "FreeImage_TagToString" );
+        myBindFunc( FreeImage_JPEGTransform, "FreeImage_JPEGTransform" );
+        myBindFunc( FreeImage_JPEGTransformU, "FreeImage_JPEGTransformU" );
+        myBindFunc( FreeImage_JPEGCrop, "FreeImage_JPEGCrop" );
+        myBindFunc( FreeImage_JPEGCropU, "FreeImage_JPEGCropU" );
+        myBindFunc( FreeImage_JPEGTransformFromHandle, "FreeImage_JPEGTransformFromHandle" );
+        myBindFunc( FreeImage_JPEGTransformCombined, "FreeImage_JPEGTransformCombined" );
+        myBindFunc( FreeImage_JPEGTransformCombinedU, "FreeImage_JPEGTransformCombinedU" );
+        myBindFunc( FreeImage_JPEGTransformCombinedFromMemory, "FreeImage_JPEGTransformCombinedFromMemory" );
 
         myBindFunc( FreeImage_RotateClassic, "FreeImage_RotateClassic" );
         myBindFunc( FreeImage_Rotate, "FreeImage_Rotate" );
         myBindFunc( FreeImage_RotateEx, "FreeImage_RotateEx" );
         myBindFunc( FreeImage_FlipHorizontal, "FreeImage_FlipHorizontal" );
         myBindFunc( FreeImage_FlipVertical, "FreeImage_FlipVertical" );
-        myBindFunc( FreeImage_JPEGTransform, "FreeImage_JPEGTransform" );
-        myBindFunc( FreeImage_JPEGTransformU, "FreeImage_JPEGTransformU" );
         myBindFunc( FreeImage_Rescale, "FreeImage_Rescale" );
         myBindFunc( FreeImage_MakeThumbnail, "FreeImage_MakeThumbnail" );
         myBindFunc( FreeImage_AdjustCurve, "FreeImage_AdjustCurve" );
@@ -325,8 +331,6 @@ class DerelictFILoader : SharedLibLoader {
         myBindFunc( FreeImage_Copy, "FreeImage_Copy" );
         myBindFunc( FreeImage_Paste, "FreeImage_Paste" );
         myBindFunc( FreeImage_Composite, "FreeImage_Composite" );
-        myBindFunc( FreeImage_JPEGCrop, "FreeImage_JPEGCrop" );
-        myBindFunc( FreeImage_JPEGCropU, "FreeImage_JPEGCropU" );
         myBindFunc( FreeImage_PreMultiplyWithAlpha, "FreeImage_PreMultiplyWithAlpha" );
         myBindFunc( FreeImage_FillBackground, "FreeImage_FillBackground" );
         myBindFunc( FreeImage_EnlargeCanvas, "FreeImage_EnlargeCanvas" );

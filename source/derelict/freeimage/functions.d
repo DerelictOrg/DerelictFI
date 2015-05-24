@@ -274,13 +274,20 @@ extern( System ) nothrow {
 
     alias da_FreeImage_TagToString = const( char )* function( FREE_IMAGE_MDMODEL model, FITAG* tag, char* Make = null );
 
+    alias da_FreeImage_JPEGTransform = BOOL function( const( char )* src_file, const( char )* dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect=TRUE );
+    alias da_FreeImage_JPEGTransformU = BOOL function( const( wchar_t )* src_file, const( wchar_t )* dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect=TRUE );
+    alias da_FreeImage_JPEGCrop = BOOL function( const( char )* src_file, const( char )* dst_file, int left, int top, int right, int bottom );
+    alias da_FreeImage_JPEGCropU = BOOL function( const( wchar_t )* src_file, const( wchar_t )* dst_file, int left, int top, int right, int bottom );
+    alias da_FreeImage_JPEGTransformFromHandle = BOOL function( FreeImageIO*,fi_handle,FreeImageIO*,fi_handle,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE );
+    alias da_FreeImage_JPEGTransformCombined = BOOL function( const(char)*,const(char)*,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE );
+    alias da_FreeImage_JPEGTransformCombinedU = BOOL function( const(wchar_t)*,const(wchar_t)*,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE );
+    alias da_FreeImage_JPEGTransformCombinedFromMemory = BOOL function( FIMEMORY*,FIMEMORY*,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE );
+
     alias da_FreeImage_RotateClassic = FIBITMAP* function( FIBITMAP* dib, double angle );
     alias da_FreeImage_Rotate = FIBITMAP* function( FIBITMAP* dib, double angle, const( void* ) bkcolor = null );
     alias da_FreeImage_RotateEx = FIBITMAP* function( FIBITMAP* dib, double angle, double x_shift, double y_shift, double x_origin, double y_origin, BOOL use_mask );
     alias da_FreeImage_FlipHorizontal = BOOL function( FIBITMAP* dib );
     alias da_FreeImage_FlipVertical = BOOL function( FIBITMAP* dib );
-    alias da_FreeImage_JPEGTransform = BOOL function( const( char )* src_file, const( char )* dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect = FALSE );
-    alias da_FreeImage_JPEGTransformU = BOOL function( const( wchar_t )* src_file, const( wchar_t )* dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect = FALSE );
 
     alias da_FreeImage_Rescale = FIBITMAP* function( FIBITMAP* dib, int dst_width, int dst_height, FREE_IMAGE_FILTER filter );
     alias da_FreeImage_MakeThumbnail = FIBITMAP* function( FIBITMAP* dib, int max_pixel_size, BOOL convert = TRUE );
@@ -306,8 +313,6 @@ extern( System ) nothrow {
     alias da_FreeImage_Copy = FIBITMAP* function( FIBITMAP* dib, int left, int top, int right, int bottom );
     alias da_FreeImage_Paste = BOOL function( FIBITMAP*dst, FIBITMAP*src, int left, int top, int alpha );
     alias da_FreeImage_Composite = FIBITMAP* function( FIBITMAP*fg, BOOL useFileBkg = FALSE, RGBQUAD* appBkColor = null, FIBITMAP*bg = null );
-    alias da_FreeImage_JPEGCrop = BOOL function( const( char )* src_file, const( char )* dst_file, int left, int top, int right, int bottom );
-    alias da_FreeImage_JPEGCropU = BOOL function( const( wchar_t )* src_file, const( wchar_t )* dst_file, int left, int top, int right, int bottom );
     alias da_FreeImage_PreMultiplyWithAlpha = BOOL function( FIBITMAP* dib );
 
     alias da_FreeImage_FillBackground = BOOL function( FIBITMAP* dib, const( void* ) color, int options = 0 );
@@ -521,14 +526,19 @@ __gshared {
     da_FreeImage_GetMetadataCount FreeImage_GetMetadataCount;
     da_FreeImage_CloneMetadata FreeImage_CloneMetadata;
     da_FreeImage_TagToString FreeImage_TagToString;
-
+    da_FreeImage_JPEGTransform FreeImage_JPEGTransform;
+    da_FreeImage_JPEGTransformU FreeImage_JPEGTransformU;
+    da_FreeImage_JPEGCrop FreeImage_JPEGCrop;
+    da_FreeImage_JPEGCropU FreeImage_JPEGCropU;
+    da_FreeImage_JPEGTransformFromHandle FreeImage_JPEGTransformFromHandle;
+    da_FreeImage_JPEGTransformCombined FreeImage_JPEGTransformCombined;
+    da_FreeImage_JPEGTransformCombinedU FreeImage_JPEGTransformCombinedU;
+    da_FreeImage_JPEGTransformCombinedFromMemory FreeImage_JPEGTransformCombinedFromMemory;
     da_FreeImage_RotateClassic FreeImage_RotateClassic;
     da_FreeImage_Rotate FreeImage_Rotate;
     da_FreeImage_RotateEx FreeImage_RotateEx;
     da_FreeImage_FlipHorizontal FreeImage_FlipHorizontal;
     da_FreeImage_FlipVertical FreeImage_FlipVertical;
-    da_FreeImage_JPEGTransform FreeImage_JPEGTransform;
-    da_FreeImage_JPEGTransformU FreeImage_JPEGTransformU;
     da_FreeImage_Rescale FreeImage_Rescale;
     da_FreeImage_MakeThumbnail FreeImage_MakeThumbnail;
     da_FreeImage_AdjustCurve FreeImage_AdjustCurve;
@@ -550,8 +560,6 @@ __gshared {
     da_FreeImage_Copy FreeImage_Copy;
     da_FreeImage_Paste FreeImage_Paste;
     da_FreeImage_Composite FreeImage_Composite;
-    da_FreeImage_JPEGCrop FreeImage_JPEGCrop;
-    da_FreeImage_JPEGCropU FreeImage_JPEGCropU;
     da_FreeImage_PreMultiplyWithAlpha FreeImage_PreMultiplyWithAlpha;
     da_FreeImage_FillBackground FreeImage_FillBackground;
     da_FreeImage_EnlargeCanvas FreeImage_EnlargeCanvas;

@@ -304,7 +304,10 @@ enum : FREE_IMAGE_FORMAT {
     FIF_JP2     = 31,
     FIF_PFM     = 32,
     FIF_PICT    = 33,
-    FIF_RAW     = 34
+    FIF_RAW     = 34,
+    // FreeImage 3.16.0
+    FIF_WEBP    = 35,
+    FFI_JXR     = 36,
 }
 
 alias int FREE_IMAGE_TYPE;
@@ -587,7 +590,13 @@ enum {
      TIFF_LOGLUV         = 0x10000,
      WBMP_DEFAULT        = 0,
      XBM_DEFAULT         = 0,
-     XPM_DEFAULT         = 0
+     XPM_DEFAULT         = 0,
+     // FreeImage 3.16.0
+     WEBP_DEFAULT        = 0,
+     WEBP_LOSSLESS       = 0x100,
+     JXR_DEFAULT         = 0,
+     JXR_LOSSLESS        = 0x0064,
+     JXR_PROGRESSIVE     = 0x2000,
  }
 
 enum {
