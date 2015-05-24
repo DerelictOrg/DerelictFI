@@ -38,8 +38,8 @@ private {
 // will also load and will mostly function properly, although nothing new in the
 // 3.16 API will be available.
 enum FREEIMAGE_MAJOR_VERSION = 3,
-     FREEIMAGE_MINOR_VERSION = 15,
-     FREEIMAGE_RELEASE_SERIAL = 4;
+     FREEIMAGE_MINOR_VERSION = 17,
+     FREEIMAGE_RELEASE_SERIAL = 0;
 
 enum FREEIMAGE_COLORORDER_BGR = 0,
      FREEIMAGE_COLORORDER_RGB = 1;
@@ -573,6 +573,7 @@ enum {
      RAW_PREVIEW         = 1,
      RAW_DISPLAY         = 2,
      RAW_HALFSIZE        = 4, // Added in 3.15.1
+     RAW_UNPROCESSED     = 8, // Added in 3.17.0
      SGI_DEFAULT         = 0,
      TARGA_DEFAULT       = 0,
      TARGA_LOAD_RGB888   = 1,
@@ -605,6 +606,13 @@ enum {
     FI_COLOR_FIND_EQUAL_COLOR    = 0x02,
     FI_COLOR_ALPHA_IS_INDEX      = 0x04,
     FI_COLOR_PALETTE_SEARCH_MASK = ( FI_COLOR_FIND_EQUAL_COLOR | FI_COLOR_ALPHA_IS_INDEX )
+}
+
+// FreeImage 3.17.0
+enum {
+    FI_RESCALE_DEFAULT          = 0x00,
+    FI_RESCALE_TRUE_COLOR       = 0x01,
+    FI_RESCALE_OMIT_METADATA    = 0x02,
 }
 
 extern( C ) nothrow alias FreeImage_OutputMessageFunction = void function( FREE_IMAGE_FORMAT fif, const( char )* msg );

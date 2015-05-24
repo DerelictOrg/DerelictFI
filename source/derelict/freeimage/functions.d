@@ -135,6 +135,7 @@ extern( System ) nothrow {
     alias da_FreeImage_GetLine = uint function( FIBITMAP* dib );
     alias da_FreeImage_GetPitch = uint function( FIBITMAP* dib );
     alias da_FreeImage_GetDIBSize = uint function( FIBITMAP* dib );
+    alias da_FreeImage_GetMemorySize = uint function(FIBITMAP*); // Added in 3.17.0
     alias da_FreeImage_GetPalette = RGBQUAD* function( FIBITMAP* dib );
 
     alias da_FreeImage_GetDotsPerMeterX = uint function( FIBITMAP* dib );
@@ -219,12 +220,15 @@ extern( System ) nothrow {
     alias da_FreeImage_Dither = FIBITMAP* function( FIBITMAP* dib, FREE_IMAGE_DITHER algorithm );
 
     alias da_FreeImage_ConvertFromRawBits = FIBITMAP* function( BYTE* bits, int width, int height, int pitch, uint bpp, uint red_mask, uint green_mask, uint blue_mask, BOOL topdown = FALSE );
+    alias da_FreeImage_ConvertFromRawBitsEx = FIBITMAP* function(BOOL,BYTE*,FREE_IMAGE_TYPE,int,int,int,uint,uint,uint,uint,BOOL topdown=FALSE);    // Added in 3.17.0
     alias da_FreeImage_ConvertToRawBits = void function( BYTE* bits, FIBITMAP* dib, int pitch, uint bpp, uint red_mask, uint green_mask, uint blue_mask, BOOL topdown = FALSE );
 
     alias da_FreeImage_ConvertToFloat = FIBITMAP* function( FIBITMAP* dib );
     alias da_FreeImage_ConvertToRGBF = FIBITMAP* function( FIBITMAP* dib );
+    alias da_FreeImage_ConvertToRGBAF = FIBITMAP* function( FIBITMAP* );    // Added in 3.17.0
     alias da_FreeImage_ConvertToUINT16 = FIBITMAP* function( FIBITMAP* dib );
     alias da_FreeImage_ConvertToRGB16 = FIBITMAP* function( FIBITMAP* dib );
+    alias da_FreeImage_ConvertToRGBA16 = FIBITMAP* function( FIBITMAP* );   // Added in 3.17.0
 
     alias da_FreeImage_ConvertToStandardType = FIBITMAP* function( FIBITMAP* src, BOOL scale_linear = TRUE );
     alias da_FreeImage_ConvertToType = FIBITMAP* function( FIBITMAP* src, FREE_IMAGE_TYPE dst_type, BOOL scale_linear = TRUE );
@@ -266,8 +270,9 @@ extern( System ) nothrow {
     alias da_FreeImage_FindNextMetadata = BOOL function( FIMETADATA* mdhandle, FITAG** tag );
     alias da_FreeImage_FindCloseMetadata = void function( FIMETADATA* mdhandle );
 
-    alias da_FreeImage_GetMetadata = BOOL function( FREE_IMAGE_MDMODEL model, FIBITMAP* dib, const( char )* key, FITAG** tag );
     alias da_FreeImage_SetMetadata = BOOL function( FREE_IMAGE_MDMODEL model, FIBITMAP* dib, const( char )* key, FITAG* tag );
+    alias da_FreeImage_GetMetadata = BOOL function( FREE_IMAGE_MDMODEL model, FIBITMAP* dib, const( char )* key, FITAG** tag );
+    alias da_FreeImage_SetMetadataKeyValue = BOOL function( FREE_IMAGE_MDMODEL,FIBITMAP*,const( char )*,const( char )* ); // Added in 3.17.0
 
     alias da_FreeImage_GetMetadataCount = uint function( FREE_IMAGE_MDMODEL model, FIBITMAP* dib );
     alias da_FreeImage_CloneMetadata = BOOL function( FIBITMAP* dst, FIBITMAP* src );
@@ -278,6 +283,8 @@ extern( System ) nothrow {
     alias da_FreeImage_JPEGTransformU = BOOL function( const( wchar_t )* src_file, const( wchar_t )* dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect=TRUE );
     alias da_FreeImage_JPEGCrop = BOOL function( const( char )* src_file, const( char )* dst_file, int left, int top, int right, int bottom );
     alias da_FreeImage_JPEGCropU = BOOL function( const( wchar_t )* src_file, const( wchar_t )* dst_file, int left, int top, int right, int bottom );
+
+    // FreeImage 3.16.0 -- 4 functions
     alias da_FreeImage_JPEGTransformFromHandle = BOOL function( FreeImageIO*,fi_handle,FreeImageIO*,fi_handle,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE );
     alias da_FreeImage_JPEGTransformCombined = BOOL function( const(char)*,const(char)*,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE );
     alias da_FreeImage_JPEGTransformCombinedU = BOOL function( const(wchar_t)*,const(wchar_t)*,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE );
@@ -291,6 +298,7 @@ extern( System ) nothrow {
 
     alias da_FreeImage_Rescale = FIBITMAP* function( FIBITMAP* dib, int dst_width, int dst_height, FREE_IMAGE_FILTER filter );
     alias da_FreeImage_MakeThumbnail = FIBITMAP* function( FIBITMAP* dib, int max_pixel_size, BOOL convert = TRUE );
+    alias da_FreeImage_RescaleRect = FIBITMAP* function( FIBITMAP*,int,int,int,int,int,int,FREE_IMAGE_FILTER filter = FILTER_CATMULLROM,uint flags = 0 ); // Added in 3.17.0
 
     alias da_FreeImage_AdjustCurve = BOOL function( FIBITMAP* dib, BYTE* LUT, FREE_IMAGE_COLOR_CHANNEL channel );
     alias da_FreeImage_AdjustGamma = BOOL function( FIBITMAP* dib, double gamma );
@@ -312,6 +320,8 @@ extern( System ) nothrow {
 
     alias da_FreeImage_Copy = FIBITMAP* function( FIBITMAP* dib, int left, int top, int right, int bottom );
     alias da_FreeImage_Paste = BOOL function( FIBITMAP*dst, FIBITMAP*src, int left, int top, int alpha );
+    alias da_FreeImage_CreateView = FIBITMAP* function( FIBITMAP*,uint,uint,uint,uint ); // Added in 3.17.0
+
     alias da_FreeImage_Composite = FIBITMAP* function( FIBITMAP*fg, BOOL useFileBkg = FALSE, RGBQUAD* appBkColor = null, FIBITMAP*bg = null );
     alias da_FreeImage_PreMultiplyWithAlpha = BOOL function( FIBITMAP* dib );
 
@@ -409,6 +419,7 @@ __gshared {
     da_FreeImage_GetLine FreeImage_GetLine;
     da_FreeImage_GetPitch FreeImage_GetPitch;
     da_FreeImage_GetDIBSize FreeImage_GetDIBSize;
+    da_FreeImage_GetMemorySize FreeImage_GetMemorySize;
     da_FreeImage_GetPalette FreeImage_GetPalette;
     da_FreeImage_GetDotsPerMeterX FreeImage_GetDotsPerMeterX;
     da_FreeImage_GetDotsPerMeterY FreeImage_GetDotsPerMeterY;
@@ -483,11 +494,14 @@ __gshared {
     da_FreeImage_Threshold FreeImage_Threshold;
     da_FreeImage_Dither FreeImage_Dither;
     da_FreeImage_ConvertFromRawBits FreeImage_ConvertFromRawBits;
+    da_FreeImage_ConvertFromRawBitsEx FreeImage_ConvertFromRawBitsEx;
     da_FreeImage_ConvertToRawBits FreeImage_ConvertToRawBits;
     da_FreeImage_ConvertToFloat FreeImage_ConvertToFloat;
     da_FreeImage_ConvertToRGBF FreeImage_ConvertToRGBF;
+    da_FreeImage_ConvertToRGBAF FreeImage_ConvertToRGBAF;
     da_FreeImage_ConvertToUINT16 FreeImage_ConvertToUINT16;
     da_FreeImage_ConvertToRGB16 FreeImage_ConvertToRGB16;
+    da_FreeImage_ConvertToRGBA16 FreeImage_ConvertToRGBA16;
     da_FreeImage_ConvertToStandardType FreeImage_ConvertToStandardType;
     da_FreeImage_ConvertToType FreeImage_ConvertToType;
     da_FreeImage_ToneMapping FreeImage_ToneMapping;
@@ -500,7 +514,6 @@ __gshared {
     da_FreeImage_ZLibGZip FreeImage_ZLibGZip;
     da_FreeImage_ZLibGUnzip FreeImage_ZLibGUnzip;
     da_FreeImage_ZLibCRC32 FreeImage_ZLibCRC32;
-
     da_FreeImage_CreateTag FreeImage_CreateTag;
     da_FreeImage_DeleteTag FreeImage_DeleteTag;
     da_FreeImage_CloneTag FreeImage_CloneTag;
@@ -521,8 +534,9 @@ __gshared {
     da_FreeImage_FindFirstMetadata FreeImage_FindFirstMetadata;
     da_FreeImage_FindNextMetadata FreeImage_FindNextMetadata;
     da_FreeImage_FindCloseMetadata FreeImage_FindCloseMetadata;
-    da_FreeImage_GetMetadata FreeImage_GetMetadata;
     da_FreeImage_SetMetadata FreeImage_SetMetadata;
+    da_FreeImage_GetMetadata FreeImage_GetMetadata;
+    da_FreeImage_SetMetadataKeyValue FreeImage_SetMetadataKeyValue;
     da_FreeImage_GetMetadataCount FreeImage_GetMetadataCount;
     da_FreeImage_CloneMetadata FreeImage_CloneMetadata;
     da_FreeImage_TagToString FreeImage_TagToString;
@@ -541,6 +555,7 @@ __gshared {
     da_FreeImage_FlipVertical FreeImage_FlipVertical;
     da_FreeImage_Rescale FreeImage_Rescale;
     da_FreeImage_MakeThumbnail FreeImage_MakeThumbnail;
+    da_FreeImage_RescaleRect FreeImage_RescaleRect;
     da_FreeImage_AdjustCurve FreeImage_AdjustCurve;
     da_FreeImage_AdjustGamma FreeImage_AdjustGamma;
     da_FreeImage_AdjustBrightness FreeImage_AdjustBrightness;
@@ -559,6 +574,7 @@ __gshared {
     da_FreeImage_SetComplexChannel FreeImage_SetComplexChannel;
     da_FreeImage_Copy FreeImage_Copy;
     da_FreeImage_Paste FreeImage_Paste;
+    da_FreeImage_CreateView FreeImage_CreateView;
     da_FreeImage_Composite FreeImage_Composite;
     da_FreeImage_PreMultiplyWithAlpha FreeImage_PreMultiplyWithAlpha;
     da_FreeImage_FillBackground FreeImage_FillBackground;

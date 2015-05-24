@@ -45,6 +45,9 @@ private {
         enum libNames = "libfreeimage.so,libfreeimage.so.3";
     else
         static assert( 0, "Need to implement FreeImage libNames for this operating system." );
+
+    version( Win64 ) enum isWin64 = true;
+    else enum isWin64 = false;
 }
 
 class DerelictFILoader : SharedLibLoader {
@@ -52,20 +55,18 @@ class DerelictFILoader : SharedLibLoader {
         super( libNames );
     }
 
-    protected override void configureMinimumVersion( SharedLibVersion minVersion )
-    {
-        if( minVersion.major == 3 && minVersion.minor == 15 && minVersion.patch == 0 )
-        {
-            missingSymbolCallback = &allowFI_3_15_0;
+    protected override void configureMinimumVersion( SharedLibVersion minVersion ) {
+        if( minVersion.major == 3 ) {
+            if( minVersion.minor == 15 && minVersion.patch == 0 )
+                missingSymbolCallback = &allowFI_3_15_0;
+            else if(minVersion.minor == 16 )
+                missingSymbolCallback = &allowFI_3_16_0;
         }
     }
 
     protected override void loadSymbols() {
         // work-around: names in FreeImage.dll are stdcall-mangled on Windows
         void myBindFunc( Func )( ref Func f, string unmangledName ) {
-            version( Win64 ) enum isWin64 = true;
-            else enum isWin64 = false;
-
             static if( Derelict_OS_Windows && !isWin64 ) {
                 import std.typecons;
                 import std.string;
@@ -179,6 +180,7 @@ class DerelictFILoader : SharedLibLoader {
         myBindFunc( FreeImage_GetLine, "FreeImage_GetLine" );
         myBindFunc( FreeImage_GetPitch, "FreeImage_GetPitch" );
         myBindFunc( FreeImage_GetDIBSize, "FreeImage_GetDIBSize" );
+        myBindFunc( FreeImage_GetMemorySize, "FreeImage_GetMemorySize");
         myBindFunc( FreeImage_GetPalette, "FreeImage_GetPalette" );
         myBindFunc( FreeImage_GetDotsPerMeterX, "FreeImage_GetDotsPerMeterX" );
         myBindFunc( FreeImage_GetDotsPerMeterY, "FreeImage_GetDotsPerMeterY" );
@@ -253,11 +255,14 @@ class DerelictFILoader : SharedLibLoader {
         myBindFunc( FreeImage_Threshold, "FreeImage_Threshold" );
         myBindFunc( FreeImage_Dither, "FreeImage_Dither" );
         myBindFunc( FreeImage_ConvertFromRawBits, "FreeImage_ConvertFromRawBits" );
+        myBindFunc( FreeImage_ConvertFromRawBitsEx, "FreeImage_ConvertFromRawBitsEx" );
         myBindFunc( FreeImage_ConvertToRawBits, "FreeImage_ConvertToRawBits" );
         myBindFunc( FreeImage_ConvertToFloat, "FreeImage_ConvertToFloat" );
         myBindFunc( FreeImage_ConvertToRGBF, "FreeImage_ConvertToRGBF" );
+        myBindFunc( FreeImage_ConvertToRGBAF, "FreeImage_ConvertToRGBAF" );
         myBindFunc( FreeImage_ConvertToUINT16, "FreeImage_ConvertToUINT16" );
         myBindFunc( FreeImage_ConvertToRGB16, "FreeImage_ConvertToRGB16" );
+        myBindFunc( FreeImage_ConvertToRGBA16, "FreeImage_ConvertToRGBA16" );
         myBindFunc( FreeImage_ConvertToStandardType, "FreeImage_ConvertToStandardType" );
         myBindFunc( FreeImage_ConvertToType, "FreeImage_ConvertToType" );
         myBindFunc( FreeImage_ToneMapping, "FreeImage_ToneMapping" );
@@ -291,8 +296,9 @@ class DerelictFILoader : SharedLibLoader {
         myBindFunc( FreeImage_FindFirstMetadata, "FreeImage_FindFirstMetadata" );
         myBindFunc( FreeImage_FindNextMetadata, "FreeImage_FindNextMetadata" );
         myBindFunc( FreeImage_FindCloseMetadata, "FreeImage_FindCloseMetadata" );
-        myBindFunc( FreeImage_GetMetadata, "FreeImage_GetMetadata" );
         myBindFunc( FreeImage_SetMetadata, "FreeImage_SetMetadata" );
+        myBindFunc( FreeImage_GetMetadata, "FreeImage_GetMetadata" );
+        myBindFunc( FreeImage_SetMetadataKeyValue, "FreeImage_SetMetadataKeyValue" );
         myBindFunc( FreeImage_GetMetadataCount, "FreeImage_GetMetadataCount" );
         myBindFunc( FreeImage_CloneMetadata, "FreeImage_CloneMetadata" );
         myBindFunc( FreeImage_TagToString, "FreeImage_TagToString" );
@@ -304,7 +310,6 @@ class DerelictFILoader : SharedLibLoader {
         myBindFunc( FreeImage_JPEGTransformCombined, "FreeImage_JPEGTransformCombined" );
         myBindFunc( FreeImage_JPEGTransformCombinedU, "FreeImage_JPEGTransformCombinedU" );
         myBindFunc( FreeImage_JPEGTransformCombinedFromMemory, "FreeImage_JPEGTransformCombinedFromMemory" );
-
         myBindFunc( FreeImage_RotateClassic, "FreeImage_RotateClassic" );
         myBindFunc( FreeImage_Rotate, "FreeImage_Rotate" );
         myBindFunc( FreeImage_RotateEx, "FreeImage_RotateEx" );
@@ -312,6 +317,7 @@ class DerelictFILoader : SharedLibLoader {
         myBindFunc( FreeImage_FlipVertical, "FreeImage_FlipVertical" );
         myBindFunc( FreeImage_Rescale, "FreeImage_Rescale" );
         myBindFunc( FreeImage_MakeThumbnail, "FreeImage_MakeThumbnail" );
+        myBindFunc( FreeImage_RescaleRect, "FreeImage_RescaleRect" );
         myBindFunc( FreeImage_AdjustCurve, "FreeImage_AdjustCurve" );
         myBindFunc( FreeImage_AdjustGamma, "FreeImage_AdjustGamma" );
         myBindFunc( FreeImage_AdjustBrightness, "FreeImage_AdjustBrightness" );
@@ -330,6 +336,7 @@ class DerelictFILoader : SharedLibLoader {
         myBindFunc( FreeImage_SetComplexChannel, "FreeImage_SetComplexChannel" );
         myBindFunc( FreeImage_Copy, "FreeImage_Copy" );
         myBindFunc( FreeImage_Paste, "FreeImage_Paste" );
+        myBindFunc( FreeImage_CreateView, "FreeImage_CreateView" );
         myBindFunc( FreeImage_Composite, "FreeImage_Composite" );
         myBindFunc( FreeImage_PreMultiplyWithAlpha, "FreeImage_PreMultiplyWithAlpha" );
         myBindFunc( FreeImage_FillBackground, "FreeImage_FillBackground" );
@@ -340,11 +347,36 @@ class DerelictFILoader : SharedLibLoader {
     }
 
     private ShouldThrow allowFI_3_15_0( string symbolName ) {
-        version( Windows ) enum ConvertToRGB16 = "_FreeImage_ConvertToRGB16@4";
-        else enum ConvertToRGB16 = "FreeImage_ConvertToRGB16";
+        static if( !isWin64 ) {
+            if( symbolName == "_FreeImage_ConvertToRGB16@4" )
+                return ShouldThrow.No;
+        }
+        else {
+            if( symbolName == "FreeImage_ConvertToRGB16" )
+                return ShouldThrow.No;
+        }
+        return allowFI_3_16_0( symbolName );
+    }
 
-        if( symbolName == ConvertToRGB16 ) return ShouldThrow.No;
-        else return ShouldThrow.Yes;
+    private ShouldThrow allowFI_3_16_0( string symbolName ) {
+        switch( symbolName ) {
+            static if( !isWin64 ) {
+                case "_FreeImage_JPEGTransformFromHandle@40":
+                case "_FreeImage_JPEGTransformCombined@32":
+                case "_FreeImage_JPEGTransformCombinedU@32":
+                case "_FreeImage_JPEGTransformCombinedFromMemory@32":
+                    break;
+            }
+            else {
+                case "FreeImage_JPEGTransformFromHandle":
+                case "FreeImage_JPEGTransformCombined":
+                case "FreeImage_JPEGTransformCombinedU":
+                case "FreeImage_JPEGTransformCombinedFromMemory":
+                    break;
+            }
+            default: return ShouldThrow.Yes;
+        }
+        return ShouldThrow.No;
     }
 }
 
