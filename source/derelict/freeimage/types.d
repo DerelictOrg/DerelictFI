@@ -32,9 +32,14 @@ private {
     import core.stdc.stddef;
 }
 
+// NOTE: This is the highest verison of FreeImage supported by this binding and is
+// the version of the shared library loaded by default.
+// Older versions back to 3.15.0 are also supported. The 3.16 shared libraries
+// will also load and will mostly function properly, although nothing new in the
+// 3.16 API will be available.
 enum FREEIMAGE_MAJOR_VERSION = 3,
      FREEIMAGE_MINOR_VERSION = 15,
-     FREEIMAGE_RELEASE_SERIAL = 3;
+     FREEIMAGE_RELEASE_SERIAL = 4;
 
 enum FREEIMAGE_COLORORDER_BGR = 0,
      FREEIMAGE_COLORORDER_RGB = 1;
@@ -68,8 +73,14 @@ alias BYTE = ubyte;
 alias WORD = ushort;
 alias DWORD = c_ulong;
 alias LONG = int;
-alias FIINT64 = long;
-alias FIUINT64 = ulong;
+
+// Renamed from FIINT64 and FIUINT64 in 3.15.4
+alias INT64 = long;
+alias UINT64 = ulong;
+
+// Added in 3.15.3
+alias FIINT64 = INT64;
+alias FIUINT64 = UINT64;
 
 align( 1 ) struct RGBQUAD {
     version( FREEIMAGE_COLORORDER_BGR ) {
@@ -114,7 +125,7 @@ alias BITMAPINFOHEADER* PBITMAPINFOHEADER;
 
 align( 1 ) struct BITMAPINFO {
     BITMAPINFOHEADER bmiHeader;
-    RGBQUAD[1]       bmiColors;
+    RGBQUAD[1] bmiColors;
 }
 
 alias BITMAPINFO* PBITMAPINFO;
@@ -402,6 +413,7 @@ enum : FREE_IMAGE_MDTYPE {
     FIDT_DOUBLE     = 12,
     FIDT_IFD        = 13,
     FIDT_PALETTE    = 14,
+    // Added in 3.15.3
     FIDT_LONG8      = 16,
     FIDT_SLONG8     = 17,
     FIDT_IFD8       = 18
@@ -516,6 +528,7 @@ enum {
      JPEG_ACCURATE       = 0x0002,
      JPEG_CMYK           = 0x0004,
      JPEG_EXIFROTATE     = 0x0008,
+     JPEG_GRAYSCALE      = 0x0010, // Added in 3.15.4
      JPEG_QUALITYSUPERB  = 0x80,
      JPEG_QUALITYGOOD    = 0x0100,
      JPEG_QUALITYNORMAL  = 0x0200,
@@ -556,7 +569,7 @@ enum {
      RAW_DEFAULT         = 0,
      RAW_PREVIEW         = 1,
      RAW_DISPLAY         = 2,
-     RAW_HALFSIZE        = 4,
+     RAW_HALFSIZE        = 4, // Added in 3.15.1
      SGI_DEFAULT         = 0,
      TARGA_DEFAULT       = 0,
      TARGA_LOAD_RGB888   = 1,
