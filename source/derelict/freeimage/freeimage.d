@@ -57,8 +57,12 @@ class DerelictFILoader : SharedLibLoader {
 
     protected override void configureMinimumVersion( SharedLibVersion minVersion ) {
         if( minVersion.major == 3 ) {
-            if( minVersion.minor == 15 && minVersion.patch == 0 )
-                missingSymbolCallback = &allowFI_3_15_0;
+            if( minVersion.minor == 15 ) {
+                if( minVersion.patch == 4 )
+                    missingSymbolCallback = &allowFI_3_15_4;
+                else
+                    missingSymbolCallback = &allowFI_3_15_0;
+            }
             else if(minVersion.minor == 16 )
                 missingSymbolCallback = &allowFI_3_16_0;
         }
@@ -347,7 +351,7 @@ class DerelictFILoader : SharedLibLoader {
     }
 
     private ShouldThrow allowFI_3_15_0( string symbolName ) {
-        static if( !isWin64 ) {
+        static if( Derelict_OS_Windows && !isWin64 ) {
             if( symbolName == "_FreeImage_ConvertToRGB16@4" )
                 return ShouldThrow.No;
         }
@@ -358,25 +362,50 @@ class DerelictFILoader : SharedLibLoader {
         return allowFI_3_16_0( symbolName );
     }
 
-    private ShouldThrow allowFI_3_16_0( string symbolName ) {
+    private ShouldThrow allowFI_3_15_4( string symbolName ) {
         switch( symbolName ) {
-            static if( !isWin64 ) {
+            static if( Derelict_OS_Windows && !isWin64 ) {
                 case "_FreeImage_JPEGTransformFromHandle@40":
                 case "_FreeImage_JPEGTransformCombined@32":
                 case "_FreeImage_JPEGTransformCombinedU@32":
                 case "_FreeImage_JPEGTransformCombinedFromMemory@32":
-                    break;
+                    return ShouldThrow.No;
             }
             else {
                 case "FreeImage_JPEGTransformFromHandle":
                 case "FreeImage_JPEGTransformCombined":
                 case "FreeImage_JPEGTransformCombinedU":
                 case "FreeImage_JPEGTransformCombinedFromMemory":
-                    break;
+                    return ShouldThrow.No;
+            }
+            default: return allowFI_3_16_0( symbolName );
+        }
+    }
+
+    private ShouldThrow allowFI_3_16_0( string symbolName ) {
+        switch( symbolName ) {
+            static if( Derelict_OS_Windows && !isWin64 ) {
+                case "FreeImage_GetMemorySize@4":
+                case "FreeImage_ConvertFromRawBitsEx@44":
+                case "FreeImage_ConvertToRGBAF@4":
+                case "FreeImage_ConvertToRGBA16@4":
+                case "FreeImage_SetMetadataKeyValue@16":
+                case "FreeImage_RescaleRect@36":
+                case "FreeImage_CreateView@20":
+                    return ShouldThrow.No;
+            }
+            else {
+                case "FreeImage_GetMemorySize":
+                case "FreeImage_ConvertFromRawBitsEx":
+                case "FreeImage_ConvertToRGBAF":
+                case "FreeImage_ConvertToRGBA16":
+                case "FreeImage_SetMetadataKeyValue":
+                case "FreeImage_RescaleRect":
+                case "FreeImage_CreateView":
+                    return ShouldThrow.No;
             }
             default: return ShouldThrow.Yes;
         }
-        return ShouldThrow.No;
     }
 }
 
