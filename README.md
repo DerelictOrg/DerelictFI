@@ -1,7 +1,7 @@
 DerelictFI
 ==========
 
-A dynamic binding to the [FreeImage][1] library, version 3.15, for the D Programming Language.
+A dynamic binding to the [FreeImage][1] library, version 3.17, for the D Programming Language.
 
 Please see the pages [Building and Linking Derelict][2] and [Using Derelict][3], in the Derelict documentation, for information on how to build DerelictFI and load the FI libraries at run time. In the meantime, here's some sample code.
 
