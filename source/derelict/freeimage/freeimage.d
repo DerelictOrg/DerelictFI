@@ -359,7 +359,7 @@ class DerelictFILoader : SharedLibLoader {
             if( symbolName == "FreeImage_ConvertToRGB16" )
                 return ShouldThrow.No;
         }
-        return allowFI_3_16_0( symbolName );
+        return allowFI_3_15_4( symbolName );
     }
 
     private ShouldThrow allowFI_3_15_4( string symbolName ) {
@@ -385,13 +385,13 @@ class DerelictFILoader : SharedLibLoader {
     private ShouldThrow allowFI_3_16_0( string symbolName ) {
         switch( symbolName ) {
             static if( Derelict_OS_Windows && !isWin64 ) {
-                case "FreeImage_GetMemorySize@4":
-                case "FreeImage_ConvertFromRawBitsEx@44":
-                case "FreeImage_ConvertToRGBAF@4":
-                case "FreeImage_ConvertToRGBA16@4":
-                case "FreeImage_SetMetadataKeyValue@16":
-                case "FreeImage_RescaleRect@36":
-                case "FreeImage_CreateView@20":
+                case "_FreeImage_GetMemorySize@4":
+                case "_FreeImage_ConvertFromRawBitsEx@44":
+                case "_FreeImage_ConvertToRGBAF@4":
+                case "_FreeImage_ConvertToRGBA16@4":
+                case "_FreeImage_SetMetadataKeyValue@16":
+                case "_FreeImage_RescaleRect@36":
+                case "_FreeImage_CreateView@20":
                     return ShouldThrow.No;
             }
             else {
