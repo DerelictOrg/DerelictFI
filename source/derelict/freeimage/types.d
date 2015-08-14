@@ -68,7 +68,7 @@ enum {
     SEEK_END = 2
 }
 
-alias BOOL = uint;
+alias BOOL = int;
 alias BYTE = ubyte;
 alias WORD = ushort;
 alias DWORD = c_ulong;
