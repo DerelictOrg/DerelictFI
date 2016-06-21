@@ -27,10 +27,8 @@ DEALINGS IN THE SOFTWARE.
 */
 module derelict.freeimage.types;
 
-private {
-    import core.stdc.config;
-    import core.stdc.stddef;
-}
+import core.stdc.config,
+       core.stdc.stddef;
 
 // NOTE: This is the highest verison of FreeImage supported by this binding and is
 // the version of the shared library loaded by default.
@@ -44,7 +42,7 @@ enum FREEIMAGE_MAJOR_VERSION = 3,
 enum FREEIMAGE_COLORORDER_BGR = 0,
      FREEIMAGE_COLORORDER_RGB = 1;
 
-version( LittleEndian ) {
+version(LittleEndian) {
     version = FREEIMAGE_COLORORDER_BGR;
 }
 else {
@@ -82,8 +80,8 @@ alias UINT64 = ulong;
 alias FIINT64 = INT64;
 alias FIUINT64 = UINT64;
 
-align( 1 ) struct RGBQUAD {
-    version( FREEIMAGE_COLORORDER_BGR ) {
+align(1) struct RGBQUAD {
+    version(FREEIMAGE_COLORORDER_BGR) {
         BYTE rgbBlue;
         BYTE rgbGreen;
         BYTE rgbRed;
@@ -95,8 +93,8 @@ align( 1 ) struct RGBQUAD {
     BYTE rgbReserved;
 }
 
-align( 1 ) struct RGBTRIPLE {
-    version( FREEIMAGE_COLORORDER_BGR ) {
+align(1) struct RGBTRIPLE {
+    version(FREEIMAGE_COLORORDER_BGR) {
         BYTE rgbtBlue;
         BYTE rgbtGreen;
         BYTE rgbtRed;
@@ -107,7 +105,7 @@ align( 1 ) struct RGBTRIPLE {
     }
 }
 
-align( 1 ) struct BITMAPINFOHEADER {
+align(1) struct BITMAPINFOHEADER {
     DWORD biSize;
     LONG  biWidth;
     LONG  biHeight;
@@ -123,40 +121,40 @@ align( 1 ) struct BITMAPINFOHEADER {
 
 alias BITMAPINFOHEADER* PBITMAPINFOHEADER;
 
-align( 1 ) struct BITMAPINFO {
+align(1) struct BITMAPINFO {
     BITMAPINFOHEADER bmiHeader;
     RGBQUAD[1] bmiColors;
 }
 
 alias BITMAPINFO* PBITMAPINFO;
 
-align( 1 ) struct FIRGB16 {
+align(1) struct FIRGB16 {
     WORD red;
     WORD green;
     WORD blue;
 }
 
-align( 1 ) struct FIRGBA16 {
+align(1) struct FIRGBA16 {
     WORD red;
     WORD green;
     WORD blue;
     WORD alpha;
 }
 
-align( 1 ) struct FIRGBF {
+align(1) struct FIRGBF {
     float red;
     float green;
     float blue;
 }
 
-align( 1 ) struct FIRGBAF {
+align(1) struct FIRGBAF {
     float red;
     float green;
     float blue;
     float alpha;
 }
 
-align( 1 ) struct FICOMPLEX {
+align(1) struct FICOMPLEX {
     double r;
     double i;
 }
@@ -169,8 +167,8 @@ struct FITAG {
     void* data;
 }
 
-version( LittleEndian ) {
-    version( FREEIMAGE_COLORORDER_BGR ) {
+version(LittleEndian) {
+    version(FREEIMAGE_COLORORDER_BGR) {
         enum {
             FI_RGBA_RED           = 2,
             FI_RGBA_GREEN         = 1,
@@ -204,7 +202,7 @@ version( LittleEndian ) {
     }
 }
 else {
-    version( FREEIMAGE_COLORORDER_BGR ) {
+    version(FREEIMAGE_COLORORDER_BGR) {
         enum {
             FI_RGBA_RED           = 2,
             FI_RGBA_GREEN         = 1,
@@ -440,14 +438,14 @@ enum : FREE_IMAGE_MDMODEL {
 }
 
 alias void* fi_handle;
-extern( System ) nothrow {
-    alias FI_ReadProc = uint function( void *buffer, uint size, uint count, fi_handle handle );
-    alias FI_WriteProc = uint function( void *buffer, uint size, uint count, fi_handle handle );
-    alias FI_SeekProc = int function( fi_handle handle, c_long offset, int origin );
-    alias FI_TellProc = c_long function( fi_handle handle );
+extern(System) nothrow {
+    alias FI_ReadProc = uint function(void *buffer, uint size, uint count, fi_handle handle);
+    alias FI_WriteProc = uint function(void *buffer, uint size, uint count, fi_handle handle);
+    alias FI_SeekProc = int function(fi_handle handle, c_long offset, int origin);
+    alias FI_TellProc = c_long function(fi_handle handle);
 }
 
-align( 1 ) struct FreeImageIO {
+align(1) struct FreeImageIO {
     FI_ReadProc  read_proc;
     FI_WriteProc write_proc;
     FI_SeekProc  seek_proc;
@@ -458,21 +456,21 @@ struct FIMEMORY {
     void *data;
 }
 
-extern(  C  ) nothrow {
-    alias FI_FormatProc = const( char )* function( char )* function();
-    alias FI_DescriptionProc = const( char )* function( char )* function();
-    alias FI_ExtensionListProc = const( char )* function( char )* function();
-    alias FI_RegExprProc = const( char )* function( char )* function();
-    alias FI_OpenProc = void* function( FreeImageIO *io, fi_handle handle, BOOL read );
-    alias FI_CloseProc = void function( FreeImageIO *io, fi_handle handle, void *data );
-    alias FI_PageCountProc = int function( FreeImageIO *io, fi_handle handle, void *data );
-    alias FI_PageCapabilityProc = int function( FreeImageIO *io, fi_handle handle, void *data );
-    alias FI_LoadProc = FIBITMAP* function( FreeImageIO *io, fi_handle handle, int page, int flags, void *data );
-    alias FI_SaveProc = BOOL function( FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data );
-    alias FI_ValidateProc = BOOL function( FreeImageIO *io, fi_handle handle );
-    alias FI_MimeProc = const( char ) function( char ) function();
-    alias FI_SupportsExportBPPProc = BOOL function( int bpp );
-    alias FI_SupportsExportTypeProc = BOOL function( FREE_IMAGE_TYPE type );
+extern(C) nothrow {
+    alias FI_FormatProc = const(char)* function(char)* function();
+    alias FI_DescriptionProc = const(char)* function(char)* function();
+    alias FI_ExtensionListProc = const(char)* function(char)* function();
+    alias FI_RegExprProc = const(char)* function(char)* function();
+    alias FI_OpenProc = void* function(FreeImageIO *io, fi_handle handle, BOOL read);
+    alias FI_CloseProc = void function(FreeImageIO *io, fi_handle handle, void *data);
+    alias FI_PageCountProc = int function(FreeImageIO *io, fi_handle handle, void *data);
+    alias FI_PageCapabilityProc = int function(FreeImageIO *io, fi_handle handle, void *data);
+    alias FI_LoadProc = FIBITMAP* function(FreeImageIO *io, fi_handle handle, int page, int flags, void *data);
+    alias FI_SaveProc = BOOL function(FreeImageIO *io, FIBITMAP *dib, fi_handle handle, int page, int flags, void *data);
+    alias FI_ValidateProc = BOOL function(FreeImageIO *io, fi_handle handle);
+    alias FI_MimeProc = const(char) function(char) function();
+    alias FI_SupportsExportBPPProc = BOOL function(int bpp);
+    alias FI_SupportsExportTypeProc = BOOL function(FREE_IMAGE_TYPE type);
     alias FI_SupportsICCProfilesProc = BOOL function();
     alias FI_SupportsNoPixelsProc = BOOL function();
 }
@@ -497,7 +495,7 @@ struct Plugin {
 }
 
 
-extern( C ) nothrow alias FI_InitProc =void function( Plugin *plugin, int format_id );
+extern(C) nothrow alias FI_InitProc =void function(Plugin *plugin, int format_id);
 
 
 // Load / Save flag constants -----------------------------------------------
@@ -605,7 +603,7 @@ enum {
     FI_COLOR_IS_RGBA_COLOR       = 0x01,
     FI_COLOR_FIND_EQUAL_COLOR    = 0x02,
     FI_COLOR_ALPHA_IS_INDEX      = 0x04,
-    FI_COLOR_PALETTE_SEARCH_MASK = ( FI_COLOR_FIND_EQUAL_COLOR | FI_COLOR_ALPHA_IS_INDEX )
+    FI_COLOR_PALETTE_SEARCH_MASK = (FI_COLOR_FIND_EQUAL_COLOR | FI_COLOR_ALPHA_IS_INDEX)
 }
 
 // FreeImage 3.17.0
@@ -615,5 +613,5 @@ enum {
     FI_RESCALE_OMIT_METADATA    = 0x02,
 }
 
-extern( C ) nothrow alias FreeImage_OutputMessageFunction = void function( FREE_IMAGE_FORMAT fif, const( char )* msg );
-extern( Windows ) nothrow alias FreeImage_OutputMessageFunctionStdCall = void function( FREE_IMAGE_FORMAT fif, const( char )* msg );
+extern(C) nothrow alias FreeImage_OutputMessageFunction = void function(FREE_IMAGE_FORMAT fif, const(char)* msg);
+extern(Windows) nothrow alias FreeImage_OutputMessageFunctionStdCall = void function(FREE_IMAGE_FORMAT fif, const(char)* msg);

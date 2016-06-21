@@ -1,0 +1,8 @@
+name "derelict-fi"
+description "A dynamic binding to the FreeImage library."
+homepage "https://github.com/DerelictOrg/DerelictFI"
+license "Boost"
+authors "Mike Parker" "Tomasz Stachowiak"
+targetName "DerelictFI"
+targetPath "lib"
+dependency "derelict-util" version="~>3.0.0"

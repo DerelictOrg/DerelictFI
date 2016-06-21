@@ -27,310 +27,311 @@ DEALINGS IN THE SOFTWARE.
 */
 module derelict.freeimage.functions;
 
-private {
-    import core.stdc.config;
-    import core.stdc.stddef;
-    import derelict.freeimage.types;
-    import derelict.util.system;
-}
+import core.stdc.config,
+       core.stdc.stddef;
 
-extern( System ) nothrow {
-    alias da_FreeImage_Initialise = void function( BOOL load_local_plugins_only = FALSE );
+import derelict.util.loader,
+       derelict.util.system;
+
+import derelict.freeimage.types;
+
+extern(System) @nogc nothrow {
+    alias da_FreeImage_Initialise = void function(BOOL load_local_plugins_only = FALSE);
     alias da_FreeImage_DeInitialise = void function();
-    alias da_FreeImage_GetVersion = const( char )* function();
-    alias da_FreeImage_GetCopyrightMessage = const( char )* function();
+    alias da_FreeImage_GetVersion = const(char)* function();
+    alias da_FreeImage_GetCopyrightMessage = const(char)* function();
 
-    alias da_FreeImage_SetOutputMessageStdCall = void function( FreeImage_OutputMessageFunctionStdCall omf );
-    alias da_FreeImage_SetOutputMessage = void function( FreeImage_OutputMessageFunction omf );
+    alias da_FreeImage_SetOutputMessageStdCall = void function(FreeImage_OutputMessageFunctionStdCall omf);
+    alias da_FreeImage_SetOutputMessage = void function(FreeImage_OutputMessageFunction omf);
 
-    alias da_FreeImage_OutputMessageProc = void function( int fif, const( char )* fmt, ... );
+    alias da_FreeImage_OutputMessageProc = void function(int fif, const(char)* fmt, ...);
 
-    alias da_FreeImage_Allocate = FIBITMAP* function( int width, int height, int bpp, uint red_mask = 0, uint green_mask = 0, uint blue_mask = 0 );
-    alias da_FreeImage_AllocateT = FIBITMAP* function( FREE_IMAGE_TYPE type, int width, int height, int bpp = 8, uint red_mask = 0, uint green_mask = 0, uint blue_mask = 0 );
-    alias da_FreeImage_Clone = FIBITMAP* function( FIBITMAP* dib );
-    alias da_FreeImage_Unload = void function( FIBITMAP* dib );
+    alias da_FreeImage_Allocate = FIBITMAP* function(int width, int height, int bpp, uint red_mask = 0, uint green_mask = 0, uint blue_mask = 0);
+    alias da_FreeImage_AllocateT = FIBITMAP* function(FREE_IMAGE_TYPE type, int width, int height, int bpp = 8, uint red_mask = 0, uint green_mask = 0, uint blue_mask = 0);
+    alias da_FreeImage_Clone = FIBITMAP* function(FIBITMAP* dib);
+    alias da_FreeImage_Unload = void function(FIBITMAP* dib);
 
-    alias da_FreeImage_HasPixels = BOOL function( FIBITMAP* dib );
+    alias da_FreeImage_HasPixels = BOOL function(FIBITMAP* dib);
 
-    alias da_FreeImage_Load = FIBITMAP* function( FREE_IMAGE_FORMAT fif, const( char )* filename, int flags = 0 );
-    alias da_FreeImage_LoadU = FIBITMAP* function( FREE_IMAGE_FORMAT fif, const( wchar_t )* filename, int flags = 0 );
-    alias da_FreeImage_LoadFromHandle = FIBITMAP* function( FREE_IMAGE_FORMAT fif, FreeImageIO* io, fi_handle handle, int flags = 0 );
-    alias da_FreeImage_Save = BOOL function( FREE_IMAGE_FORMAT fif, FIBITMAP* dib, const( char )* filename, int flags = 0 );
-    alias da_FreeImage_SaveU = BOOL function( FREE_IMAGE_FORMAT fif, FIBITMAP* dib, const( wchar_t )* filename, int flags = 0 );
-    alias da_FreeImage_SaveToHandle = BOOL function( FREE_IMAGE_FORMAT fif, FIBITMAP* dib, FreeImageIO* io, fi_handle handle, int flags = 0 );
+    alias da_FreeImage_Load = FIBITMAP* function(FREE_IMAGE_FORMAT fif, const(char)* filename, int flags = 0);
+    alias da_FreeImage_LoadU = FIBITMAP* function(FREE_IMAGE_FORMAT fif, const(wchar_t)* filename, int flags = 0);
+    alias da_FreeImage_LoadFromHandle = FIBITMAP* function(FREE_IMAGE_FORMAT fif, FreeImageIO* io, fi_handle handle, int flags = 0);
+    alias da_FreeImage_Save = BOOL function(FREE_IMAGE_FORMAT fif, FIBITMAP* dib, const(char)* filename, int flags = 0);
+    alias da_FreeImage_SaveU = BOOL function(FREE_IMAGE_FORMAT fif, FIBITMAP* dib, const(wchar_t)* filename, int flags = 0);
+    alias da_FreeImage_SaveToHandle = BOOL function(FREE_IMAGE_FORMAT fif, FIBITMAP* dib, FreeImageIO* io, fi_handle handle, int flags = 0);
 
-    alias da_FreeImage_OpenMemory = FIMEMORY* function( BYTE* data = null, DWORD size_in_bytes = 0 );
-    alias da_FreeImage_CloseMemory = void function( FIMEMORY* stream );
-    alias da_FreeImage_LoadFromMemory = FIBITMAP* function( FREE_IMAGE_FORMAT fif, FIMEMORY* stream, int flags = 0 );
-    alias da_FreeImage_SaveToMemory = BOOL function( FREE_IMAGE_FORMAT fif, FIBITMAP* dib, FIMEMORY* stream, int flags = 0 );
-    alias da_FreeImage_TellMemory = c_long function( FIMEMORY* stream );
-    alias da_FreeImage_SeekMemory = BOOL function( FIMEMORY* stream, c_long offset, int origin );
-    alias da_FreeImage_AcquireMemory = BOOL function( FIMEMORY* stream, BYTE**data, DWORD* size_in_bytes );
-    alias da_FreeImage_ReadMemory = uint function( void* buffer, uint size, uint count, FIMEMORY* stream );
-    alias da_FreeImage_WriteMemory = uint function( const( void* ) buffer, uint size, uint count, FIMEMORY* stream );
+    alias da_FreeImage_OpenMemory = FIMEMORY* function(BYTE* data = null, DWORD size_in_bytes = 0);
+    alias da_FreeImage_CloseMemory = void function(FIMEMORY* stream);
+    alias da_FreeImage_LoadFromMemory = FIBITMAP* function(FREE_IMAGE_FORMAT fif, FIMEMORY* stream, int flags = 0);
+    alias da_FreeImage_SaveToMemory = BOOL function(FREE_IMAGE_FORMAT fif, FIBITMAP* dib, FIMEMORY* stream, int flags = 0);
+    alias da_FreeImage_TellMemory = c_long function(FIMEMORY* stream);
+    alias da_FreeImage_SeekMemory = BOOL function(FIMEMORY* stream, c_long offset, int origin);
+    alias da_FreeImage_AcquireMemory = BOOL function(FIMEMORY* stream, BYTE**data, DWORD* size_in_bytes);
+    alias da_FreeImage_ReadMemory = uint function(void* buffer, uint size, uint count, FIMEMORY* stream);
+    alias da_FreeImage_WriteMemory = uint function(const(void*) buffer, uint size, uint count, FIMEMORY* stream);
 
-    alias da_FreeImage_LoadMultiBitmapFromMemory = FIMULTIBITMAP* function( FREE_IMAGE_FORMAT fif, FIMEMORY* stream, int flags = 0 );
-    alias da_FreeImage_SaveMultiBitmapToMemory = BOOL function( FREE_IMAGE_FORMAT fif, FIMULTIBITMAP* bitmap, FIMEMORY* stream, int flags );
+    alias da_FreeImage_LoadMultiBitmapFromMemory = FIMULTIBITMAP* function(FREE_IMAGE_FORMAT fif, FIMEMORY* stream, int flags = 0);
+    alias da_FreeImage_SaveMultiBitmapToMemory = BOOL function(FREE_IMAGE_FORMAT fif, FIMULTIBITMAP* bitmap, FIMEMORY* stream, int flags);
 
-    alias da_FreeImage_RegisterLocalPlugin = FREE_IMAGE_FORMAT function( FI_InitProc proc_address, const( char )* format = null, const( char )* description = null, const( char )* extension = null, const( char )* regexpr = null );
+    alias da_FreeImage_RegisterLocalPlugin = FREE_IMAGE_FORMAT function(FI_InitProc proc_address, const(char)* format = null, const(char)* description = null, const(char)* extension = null, const(char)* regexpr = null);
 
-    static if ( Derelict_OS_Windows )
-        alias  da_FreeImage_RegisterExternalPlugin = FREE_IMAGE_FORMAT function( const( char )* path, const( char )* format = null, const( char )* description = null, const( char )* extension = null, const( char )* regexpr = null );
+    static if (Derelict_OS_Windows)
+        alias  da_FreeImage_RegisterExternalPlugin = FREE_IMAGE_FORMAT function(const(char)* path, const(char)* format = null, const(char)* description = null, const(char)* extension = null, const(char)* regexpr = null);
 
     alias da_FreeImage_GetFIFCount = int function();
-    alias da_FreeImage_SetPluginEnabled = int function( FREE_IMAGE_FORMAT fif, BOOL enable );
-    alias da_FreeImage_IsPluginEnabled = int function( FREE_IMAGE_FORMAT fif );
-    alias da_FreeImage_GetFIFFromFormat = FREE_IMAGE_FORMAT function( const( char )* format );
-    alias da_FreeImage_GetFIFFromMime = FREE_IMAGE_FORMAT function( const( char )* mime );
-    alias da_FreeImage_GetFormatFromFIF = const( char )* function( FREE_IMAGE_FORMAT fif );
-    alias da_FreeImage_GetFIFExtensionList = const( char )* function( FREE_IMAGE_FORMAT fif );
-    alias da_FreeImage_GetFIFDescription = const( char )* function( FREE_IMAGE_FORMAT fif );
-    alias da_FreeImage_GetFIFRegExpr = const( char )* function( FREE_IMAGE_FORMAT fif );
-    alias da_FreeImage_GetFIFMimeType = const( char )* function( FREE_IMAGE_FORMAT fif );
-    alias da_FreeImage_GetFIFFromFilename = FREE_IMAGE_FORMAT function( const( char )* filename );
-    alias da_FreeImage_GetFIFFromFilenameU = FREE_IMAGE_FORMAT function( const( wchar_t )* filename );
-    alias da_FreeImage_FIFSupportsReading = BOOL function( FREE_IMAGE_FORMAT fif );
-    alias da_FreeImage_FIFSupportsWriting = BOOL function( FREE_IMAGE_FORMAT fif );
-    alias da_FreeImage_FIFSupportsExportBPP = BOOL function( FREE_IMAGE_FORMAT fif, int bpp );
-    alias da_FreeImage_FIFSupportsExportType = BOOL function( FREE_IMAGE_FORMAT fif, FREE_IMAGE_TYPE type );
-    alias da_FreeImage_FIFSupportsICCProfiles = BOOL function( FREE_IMAGE_FORMAT fif );
-    alias da_FreeImage_FIFSupportsNoPixels = BOOL function( FREE_IMAGE_FORMAT fif );
+    alias da_FreeImage_SetPluginEnabled = int function(FREE_IMAGE_FORMAT fif, BOOL enable);
+    alias da_FreeImage_IsPluginEnabled = int function(FREE_IMAGE_FORMAT fif);
+    alias da_FreeImage_GetFIFFromFormat = FREE_IMAGE_FORMAT function(const(char)* format);
+    alias da_FreeImage_GetFIFFromMime = FREE_IMAGE_FORMAT function(const(char)* mime);
+    alias da_FreeImage_GetFormatFromFIF = const(char)* function(FREE_IMAGE_FORMAT fif);
+    alias da_FreeImage_GetFIFExtensionList = const(char)* function(FREE_IMAGE_FORMAT fif);
+    alias da_FreeImage_GetFIFDescription = const(char)* function(FREE_IMAGE_FORMAT fif);
+    alias da_FreeImage_GetFIFRegExpr = const(char)* function(FREE_IMAGE_FORMAT fif);
+    alias da_FreeImage_GetFIFMimeType = const(char)* function(FREE_IMAGE_FORMAT fif);
+    alias da_FreeImage_GetFIFFromFilename = FREE_IMAGE_FORMAT function(const(char)* filename);
+    alias da_FreeImage_GetFIFFromFilenameU = FREE_IMAGE_FORMAT function(const(wchar_t)* filename);
+    alias da_FreeImage_FIFSupportsReading = BOOL function(FREE_IMAGE_FORMAT fif);
+    alias da_FreeImage_FIFSupportsWriting = BOOL function(FREE_IMAGE_FORMAT fif);
+    alias da_FreeImage_FIFSupportsExportBPP = BOOL function(FREE_IMAGE_FORMAT fif, int bpp);
+    alias da_FreeImage_FIFSupportsExportType = BOOL function(FREE_IMAGE_FORMAT fif, FREE_IMAGE_TYPE type);
+    alias da_FreeImage_FIFSupportsICCProfiles = BOOL function(FREE_IMAGE_FORMAT fif);
+    alias da_FreeImage_FIFSupportsNoPixels = BOOL function(FREE_IMAGE_FORMAT fif);
 
-    alias da_FreeImage_OpenMultiBitmap = FIMULTIBITMAP* function( FREE_IMAGE_FORMAT fif, const( char )* filename, BOOL create_new, BOOL read_only, BOOL keep_cache_in_memory = FALSE, int flags = 0 );
-    alias da_FreeImage_OpenMultiBitmapFromHandle = FIMULTIBITMAP* function( FREE_IMAGE_FORMAT fif, FreeImageIO* io, fi_handle handle, int flags = 0 );
-    alias da_FreeImage_SaveMultiBitmapToHandle = BOOL function( FREE_IMAGE_FORMAT fif, FIMULTIBITMAP* bitmap, FreeImageIO* io, fi_handle handle, int flags = 0 );
-    alias da_FreeImage_CloseMultiBitmap = BOOL function( FIMULTIBITMAP* bitmap, int flags = 0 );
-    alias da_FreeImage_GetPageCount = int function( FIMULTIBITMAP* bitmap );
-    alias da_FreeImage_AppendPage = void function( FIMULTIBITMAP* bitmap, FIBITMAP*data );
-    alias da_FreeImage_InsertPage = void function( FIMULTIBITMAP* bitmap, int page, FIBITMAP*data );
-    alias da_FreeImage_DeletePage = void function( FIMULTIBITMAP* bitmap, int page );
-    alias da_FreeImage_LockPage = FIBITMAP* function( FIMULTIBITMAP* bitmap, int page );
-    alias da_FreeImage_UnlockPage = void function( FIMULTIBITMAP* bitmap, FIBITMAP*data, BOOL changed );
-    alias da_FreeImage_MovePage = BOOL function( FIMULTIBITMAP* bitmap, int target, int source );
-    alias da_FreeImage_GetLockedPageNumbers = BOOL function( FIMULTIBITMAP* bitmap, int* pages, int* count );
+    alias da_FreeImage_OpenMultiBitmap = FIMULTIBITMAP* function(FREE_IMAGE_FORMAT fif, const(char)* filename, BOOL create_new, BOOL read_only, BOOL keep_cache_in_memory = FALSE, int flags = 0);
+    alias da_FreeImage_OpenMultiBitmapFromHandle = FIMULTIBITMAP* function(FREE_IMAGE_FORMAT fif, FreeImageIO* io, fi_handle handle, int flags = 0);
+    alias da_FreeImage_SaveMultiBitmapToHandle = BOOL function(FREE_IMAGE_FORMAT fif, FIMULTIBITMAP* bitmap, FreeImageIO* io, fi_handle handle, int flags = 0);
+    alias da_FreeImage_CloseMultiBitmap = BOOL function(FIMULTIBITMAP* bitmap, int flags = 0);
+    alias da_FreeImage_GetPageCount = int function(FIMULTIBITMAP* bitmap);
+    alias da_FreeImage_AppendPage = void function(FIMULTIBITMAP* bitmap, FIBITMAP*data);
+    alias da_FreeImage_InsertPage = void function(FIMULTIBITMAP* bitmap, int page, FIBITMAP*data);
+    alias da_FreeImage_DeletePage = void function(FIMULTIBITMAP* bitmap, int page);
+    alias da_FreeImage_LockPage = FIBITMAP* function(FIMULTIBITMAP* bitmap, int page);
+    alias da_FreeImage_UnlockPage = void function(FIMULTIBITMAP* bitmap, FIBITMAP*data, BOOL changed);
+    alias da_FreeImage_MovePage = BOOL function(FIMULTIBITMAP* bitmap, int target, int source);
+    alias da_FreeImage_GetLockedPageNumbers = BOOL function(FIMULTIBITMAP* bitmap, int* pages, int* count);
 
-    alias da_FreeImage_GetFileType = FREE_IMAGE_FORMAT function( const( char )* filename, int size = 0 );
-    alias da_FreeImage_GetFileTypeU = FREE_IMAGE_FORMAT function( const( wchar_t )* filename, int size = 0 );
-    alias da_FreeImage_GetFileTypeFromHandle = FREE_IMAGE_FORMAT function( FreeImageIO* io, fi_handle handle, int size = 0 );
-    alias da_FreeImage_GetFileTypeFromMemory = FREE_IMAGE_FORMAT function( FIMEMORY* stream, int size = 0 );
+    alias da_FreeImage_GetFileType = FREE_IMAGE_FORMAT function(const(char)* filename, int size = 0);
+    alias da_FreeImage_GetFileTypeU = FREE_IMAGE_FORMAT function(const(wchar_t)* filename, int size = 0);
+    alias da_FreeImage_GetFileTypeFromHandle = FREE_IMAGE_FORMAT function(FreeImageIO* io, fi_handle handle, int size = 0);
+    alias da_FreeImage_GetFileTypeFromMemory = FREE_IMAGE_FORMAT function(FIMEMORY* stream, int size = 0);
 
-    alias da_FreeImage_GetImageType = FREE_IMAGE_TYPE function( FIBITMAP* dib );
+    alias da_FreeImage_GetImageType = FREE_IMAGE_TYPE function(FIBITMAP* dib);
 
     alias da_FreeImage_IsLittleEndian = BOOL function();
-    alias da_FreeImage_LookupX11Color = BOOL function( const( char )* szColor, BYTE* nRed, BYTE* nGreen, BYTE* nBlue );
-    alias da_FreeImage_LookupSVGColor = BOOL function( const( char )* szColor, BYTE* nRed, BYTE* nGreen, BYTE* nBlue );
+    alias da_FreeImage_LookupX11Color = BOOL function(const(char)* szColor, BYTE* nRed, BYTE* nGreen, BYTE* nBlue);
+    alias da_FreeImage_LookupSVGColor = BOOL function(const(char)* szColor, BYTE* nRed, BYTE* nGreen, BYTE* nBlue);
 
-    alias da_FreeImage_GetBits = BYTE* function( FIBITMAP* dib );
-    alias da_FreeImage_GetScanLine = BYTE* function( FIBITMAP* dib, int scanline );
+    alias da_FreeImage_GetBits = BYTE* function(FIBITMAP* dib);
+    alias da_FreeImage_GetScanLine = BYTE* function(FIBITMAP* dib, int scanline);
 
-    alias da_FreeImage_GetPixelIndex = BOOL function( FIBITMAP* dib, uint x, uint y, BYTE* value );
-    alias da_FreeImage_GetPixelColor = BOOL function( FIBITMAP* dib, uint x, uint y, RGBQUAD* value );
-    alias da_FreeImage_SetPixelIndex = BOOL function( FIBITMAP* dib, uint x, uint y, BYTE* value );
-    alias da_FreeImage_SetPixelColor = BOOL function( FIBITMAP* dib, uint x, uint y, RGBQUAD* value );
+    alias da_FreeImage_GetPixelIndex = BOOL function(FIBITMAP* dib, uint x, uint y, BYTE* value);
+    alias da_FreeImage_GetPixelColor = BOOL function(FIBITMAP* dib, uint x, uint y, RGBQUAD* value);
+    alias da_FreeImage_SetPixelIndex = BOOL function(FIBITMAP* dib, uint x, uint y, BYTE* value);
+    alias da_FreeImage_SetPixelColor = BOOL function(FIBITMAP* dib, uint x, uint y, RGBQUAD* value);
 
-    alias da_FreeImage_GetColorsUsed = uint function( FIBITMAP* dib );
-    alias da_FreeImage_GetBPP = uint function( FIBITMAP* dib );
-    alias da_FreeImage_GetWidth = uint function( FIBITMAP* dib );
-    alias da_FreeImage_GetHeight = uint function( FIBITMAP* dib );
-    alias da_FreeImage_GetLine = uint function( FIBITMAP* dib );
-    alias da_FreeImage_GetPitch = uint function( FIBITMAP* dib );
-    alias da_FreeImage_GetDIBSize = uint function( FIBITMAP* dib );
+    alias da_FreeImage_GetColorsUsed = uint function(FIBITMAP* dib);
+    alias da_FreeImage_GetBPP = uint function(FIBITMAP* dib);
+    alias da_FreeImage_GetWidth = uint function(FIBITMAP* dib);
+    alias da_FreeImage_GetHeight = uint function(FIBITMAP* dib);
+    alias da_FreeImage_GetLine = uint function(FIBITMAP* dib);
+    alias da_FreeImage_GetPitch = uint function(FIBITMAP* dib);
+    alias da_FreeImage_GetDIBSize = uint function(FIBITMAP* dib);
     alias da_FreeImage_GetMemorySize = uint function(FIBITMAP*); // Added in 3.17.0
-    alias da_FreeImage_GetPalette = RGBQUAD* function( FIBITMAP* dib );
+    alias da_FreeImage_GetPalette = RGBQUAD* function(FIBITMAP* dib);
 
-    alias da_FreeImage_GetDotsPerMeterX = uint function( FIBITMAP* dib );
-    alias da_FreeImage_GetDotsPerMeterY = uint function( FIBITMAP* dib );
-    alias da_FreeImage_SetDotsPerMeterX = void function( FIBITMAP* dib, uint res );
-    alias da_FreeImage_SetDotsPerMeterY = void function( FIBITMAP* dib, uint res );
+    alias da_FreeImage_GetDotsPerMeterX = uint function(FIBITMAP* dib);
+    alias da_FreeImage_GetDotsPerMeterY = uint function(FIBITMAP* dib);
+    alias da_FreeImage_SetDotsPerMeterX = void function(FIBITMAP* dib, uint res);
+    alias da_FreeImage_SetDotsPerMeterY = void function(FIBITMAP* dib, uint res);
 
-    alias da_FreeImage_GetInfoHeader = BITMAPINFOHEADER* function( FIBITMAP* dib );
-    alias da_FreeImage_GetInfo = BITMAPINFO* function( FIBITMAP* dib );
-    alias da_FreeImage_GetColorType = FREE_IMAGE_COLOR_TYPE function( FIBITMAP* dib );
+    alias da_FreeImage_GetInfoHeader = BITMAPINFOHEADER* function(FIBITMAP* dib);
+    alias da_FreeImage_GetInfo = BITMAPINFO* function(FIBITMAP* dib);
+    alias da_FreeImage_GetColorType = FREE_IMAGE_COLOR_TYPE function(FIBITMAP* dib);
 
-    alias da_FreeImage_GetRedMask = uint function( FIBITMAP* dib );
-    alias da_FreeImage_GetGreenMask = uint function( FIBITMAP* dib );
-    alias da_FreeImage_GetBlueMask = uint function( FIBITMAP* dib );
+    alias da_FreeImage_GetRedMask = uint function(FIBITMAP* dib);
+    alias da_FreeImage_GetGreenMask = uint function(FIBITMAP* dib);
+    alias da_FreeImage_GetBlueMask = uint function(FIBITMAP* dib);
 
-    alias da_FreeImage_GetTransparencyCount = uint function( FIBITMAP* dib );
-    alias da_FreeImage_GetTransparencyTable = BYTE* function( FIBITMAP* dib );
-    alias da_FreeImage_SetTransparent = void function( FIBITMAP* dib, BOOL enabled );
-    alias da_FreeImage_SetTransparencyTable = void function( FIBITMAP* dib, BYTE* table, int count );
-    alias da_FreeImage_IsTransparent = BOOL function( FIBITMAP* dib );
-    alias da_FreeImage_SetTransparentIndex = void function( FIBITMAP* dib, int index );
-    alias da_FreeImage_GetTransparentIndex = int function( FIBITMAP* dib );
+    alias da_FreeImage_GetTransparencyCount = uint function(FIBITMAP* dib);
+    alias da_FreeImage_GetTransparencyTable = BYTE* function(FIBITMAP* dib);
+    alias da_FreeImage_SetTransparent = void function(FIBITMAP* dib, BOOL enabled);
+    alias da_FreeImage_SetTransparencyTable = void function(FIBITMAP* dib, BYTE* table, int count);
+    alias da_FreeImage_IsTransparent = BOOL function(FIBITMAP* dib);
+    alias da_FreeImage_SetTransparentIndex = void function(FIBITMAP* dib, int index);
+    alias da_FreeImage_GetTransparentIndex = int function(FIBITMAP* dib);
 
-    alias da_FreeImage_HasBackgroundColor = BOOL function( FIBITMAP* dib );
-    alias da_FreeImage_GetBackgroundColor = BOOL function( FIBITMAP* dib, RGBQUAD* bkcolor );
-    alias da_FreeImage_SetBackgroundColor = BOOL function( FIBITMAP* dib, RGBQUAD* bkcolor );
+    alias da_FreeImage_HasBackgroundColor = BOOL function(FIBITMAP* dib);
+    alias da_FreeImage_GetBackgroundColor = BOOL function(FIBITMAP* dib, RGBQUAD* bkcolor);
+    alias da_FreeImage_SetBackgroundColor = BOOL function(FIBITMAP* dib, RGBQUAD* bkcolor);
 
-    alias da_FreeImage_GetThumbnail = FIBITMAP* function( FIBITMAP* dib );
-    alias da_FreeImage_SetThumbnail = BOOL function( FIBITMAP* dib, FIBITMAP*thumbnail );
+    alias da_FreeImage_GetThumbnail = FIBITMAP* function(FIBITMAP* dib);
+    alias da_FreeImage_SetThumbnail = BOOL function(FIBITMAP* dib, FIBITMAP*thumbnail);
 
-    alias da_FreeImage_GetICCProfile = FIICCPROFILE* function( FIBITMAP* dib );
-    alias da_FreeImage_CreateICCProfile = FIICCPROFILE* function( FIBITMAP* dib, void* data, c_long size );
-    alias da_FreeImage_DestroyICCProfile = void function( FIBITMAP* dib );
+    alias da_FreeImage_GetICCProfile = FIICCPROFILE* function(FIBITMAP* dib);
+    alias da_FreeImage_CreateICCProfile = FIICCPROFILE* function(FIBITMAP* dib, void* data, c_long size);
+    alias da_FreeImage_DestroyICCProfile = void function(FIBITMAP* dib);
 
-    alias da_FreeImage_ConvertLine1To4 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine8To4 = void function( BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette );
-    alias da_FreeImage_ConvertLine16To4_555 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine16To4_565 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine24To4 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine32To4 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine1To8 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine4To8 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine16To8_555 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine16To8_565 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine24To8 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine32To8 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine1To16_555 = void function( BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette );
-    alias da_FreeImage_ConvertLine4To16_555 = void function( BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette );
-    alias da_FreeImage_ConvertLine8To16_555 = void function( BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette );
-    alias da_FreeImage_ConvertLine16_565_To16_555 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine24To16_555 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine32To16_555 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine1To16_565 = void function( BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette );
-    alias da_FreeImage_ConvertLine4To16_565 = void function( BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette );
-    alias da_FreeImage_ConvertLine8To16_565 = void function( BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette );
-    alias da_FreeImage_ConvertLine16_555_To16_565 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine24To16_565 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine32To16_565 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine1To24 = void function( BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette );
-    alias da_FreeImage_ConvertLine4To24 = void function( BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette );
-    alias da_FreeImage_ConvertLine8To24 = void function( BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette );
-    alias da_FreeImage_ConvertLine16To24_555 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine16To24_565 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine32To24 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine1To32 = void function( BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette );
-    alias da_FreeImage_ConvertLine4To32 = void function( BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette );
-    alias da_FreeImage_ConvertLine8To32 = void function( BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette );
-    alias da_FreeImage_ConvertLine16To32_555 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine16To32_565 = void function( BYTE* target, BYTE* source, int width_in_pixels );
-    alias da_FreeImage_ConvertLine24To32 = void function( BYTE* target, BYTE* source, int width_in_pixels );
+    alias da_FreeImage_ConvertLine1To4 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine8To4 = void function(BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette);
+    alias da_FreeImage_ConvertLine16To4_555 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine16To4_565 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine24To4 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine32To4 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine1To8 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine4To8 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine16To8_555 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine16To8_565 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine24To8 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine32To8 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine1To16_555 = void function(BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette);
+    alias da_FreeImage_ConvertLine4To16_555 = void function(BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette);
+    alias da_FreeImage_ConvertLine8To16_555 = void function(BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette);
+    alias da_FreeImage_ConvertLine16_565_To16_555 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine24To16_555 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine32To16_555 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine1To16_565 = void function(BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette);
+    alias da_FreeImage_ConvertLine4To16_565 = void function(BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette);
+    alias da_FreeImage_ConvertLine8To16_565 = void function(BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette);
+    alias da_FreeImage_ConvertLine16_555_To16_565 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine24To16_565 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine32To16_565 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine1To24 = void function(BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette);
+    alias da_FreeImage_ConvertLine4To24 = void function(BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette);
+    alias da_FreeImage_ConvertLine8To24 = void function(BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette);
+    alias da_FreeImage_ConvertLine16To24_555 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine16To24_565 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine32To24 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine1To32 = void function(BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette);
+    alias da_FreeImage_ConvertLine4To32 = void function(BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette);
+    alias da_FreeImage_ConvertLine8To32 = void function(BYTE* target, BYTE* source, int width_in_pixels, RGBQUAD* palette);
+    alias da_FreeImage_ConvertLine16To32_555 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine16To32_565 = void function(BYTE* target, BYTE* source, int width_in_pixels);
+    alias da_FreeImage_ConvertLine24To32 = void function(BYTE* target, BYTE* source, int width_in_pixels);
 
-    alias da_FreeImage_ConvertTo4Bits = FIBITMAP* function( FIBITMAP* dib );
-    alias da_FreeImage_ConvertTo8Bits = FIBITMAP* function( FIBITMAP* dib );
-    alias da_FreeImage_ConvertToGreyscale = FIBITMAP* function( FIBITMAP* dib );
-    alias da_FreeImage_ConvertTo16Bits555 = FIBITMAP* function( FIBITMAP* dib );
-    alias da_FreeImage_ConvertTo16Bits565 = FIBITMAP* function( FIBITMAP* dib );
-    alias da_FreeImage_ConvertTo24Bits = FIBITMAP* function( FIBITMAP* dib );
-    alias da_FreeImage_ConvertTo32Bits = FIBITMAP* function( FIBITMAP* dib );
-    alias da_FreeImage_ColorQuantize = FIBITMAP* function( FIBITMAP* dib, FREE_IMAGE_QUANTIZE quantize );
-    alias da_FreeImage_ColorQuantizeEx = FIBITMAP* function( FIBITMAP* dib, FREE_IMAGE_QUANTIZE quantize = FIQ_WUQUANT, int PaletteSize = 256, int ReserveSize = 0, RGBQUAD* ReservePalette = null );
-    alias da_FreeImage_Threshold = FIBITMAP* function( FIBITMAP* dib, BYTE T );
-    alias da_FreeImage_Dither = FIBITMAP* function( FIBITMAP* dib, FREE_IMAGE_DITHER algorithm );
+    alias da_FreeImage_ConvertTo4Bits = FIBITMAP* function(FIBITMAP* dib);
+    alias da_FreeImage_ConvertTo8Bits = FIBITMAP* function(FIBITMAP* dib);
+    alias da_FreeImage_ConvertToGreyscale = FIBITMAP* function(FIBITMAP* dib);
+    alias da_FreeImage_ConvertTo16Bits555 = FIBITMAP* function(FIBITMAP* dib);
+    alias da_FreeImage_ConvertTo16Bits565 = FIBITMAP* function(FIBITMAP* dib);
+    alias da_FreeImage_ConvertTo24Bits = FIBITMAP* function(FIBITMAP* dib);
+    alias da_FreeImage_ConvertTo32Bits = FIBITMAP* function(FIBITMAP* dib);
+    alias da_FreeImage_ColorQuantize = FIBITMAP* function(FIBITMAP* dib, FREE_IMAGE_QUANTIZE quantize);
+    alias da_FreeImage_ColorQuantizeEx = FIBITMAP* function(FIBITMAP* dib, FREE_IMAGE_QUANTIZE quantize = FIQ_WUQUANT, int PaletteSize = 256, int ReserveSize = 0, RGBQUAD* ReservePalette = null);
+    alias da_FreeImage_Threshold = FIBITMAP* function(FIBITMAP* dib, BYTE T);
+    alias da_FreeImage_Dither = FIBITMAP* function(FIBITMAP* dib, FREE_IMAGE_DITHER algorithm);
 
-    alias da_FreeImage_ConvertFromRawBits = FIBITMAP* function( BYTE* bits, int width, int height, int pitch, uint bpp, uint red_mask, uint green_mask, uint blue_mask, BOOL topdown = FALSE );
+    alias da_FreeImage_ConvertFromRawBits = FIBITMAP* function(BYTE* bits, int width, int height, int pitch, uint bpp, uint red_mask, uint green_mask, uint blue_mask, BOOL topdown = FALSE);
     alias da_FreeImage_ConvertFromRawBitsEx = FIBITMAP* function(BOOL,BYTE*,FREE_IMAGE_TYPE,int,int,int,uint,uint,uint,uint,BOOL topdown=FALSE);    // Added in 3.17.0
-    alias da_FreeImage_ConvertToRawBits = void function( BYTE* bits, FIBITMAP* dib, int pitch, uint bpp, uint red_mask, uint green_mask, uint blue_mask, BOOL topdown = FALSE );
+    alias da_FreeImage_ConvertToRawBits = void function(BYTE* bits, FIBITMAP* dib, int pitch, uint bpp, uint red_mask, uint green_mask, uint blue_mask, BOOL topdown = FALSE);
 
-    alias da_FreeImage_ConvertToFloat = FIBITMAP* function( FIBITMAP* dib );
-    alias da_FreeImage_ConvertToRGBF = FIBITMAP* function( FIBITMAP* dib );
-    alias da_FreeImage_ConvertToRGBAF = FIBITMAP* function( FIBITMAP* );    // Added in 3.17.0
-    alias da_FreeImage_ConvertToUINT16 = FIBITMAP* function( FIBITMAP* dib );
-    alias da_FreeImage_ConvertToRGB16 = FIBITMAP* function( FIBITMAP* dib );
-    alias da_FreeImage_ConvertToRGBA16 = FIBITMAP* function( FIBITMAP* );   // Added in 3.17.0
+    alias da_FreeImage_ConvertToFloat = FIBITMAP* function(FIBITMAP* dib);
+    alias da_FreeImage_ConvertToRGBF = FIBITMAP* function(FIBITMAP* dib);
+    alias da_FreeImage_ConvertToRGBAF = FIBITMAP* function(FIBITMAP*);    // Added in 3.17.0
+    alias da_FreeImage_ConvertToUINT16 = FIBITMAP* function(FIBITMAP* dib);
+    alias da_FreeImage_ConvertToRGB16 = FIBITMAP* function(FIBITMAP* dib);
+    alias da_FreeImage_ConvertToRGBA16 = FIBITMAP* function(FIBITMAP*);   // Added in 3.17.0
 
-    alias da_FreeImage_ConvertToStandardType = FIBITMAP* function( FIBITMAP* src, BOOL scale_linear = TRUE );
-    alias da_FreeImage_ConvertToType = FIBITMAP* function( FIBITMAP* src, FREE_IMAGE_TYPE dst_type, BOOL scale_linear = TRUE );
+    alias da_FreeImage_ConvertToStandardType = FIBITMAP* function(FIBITMAP* src, BOOL scale_linear = TRUE);
+    alias da_FreeImage_ConvertToType = FIBITMAP* function(FIBITMAP* src, FREE_IMAGE_TYPE dst_type, BOOL scale_linear = TRUE);
 
-    alias da_FreeImage_ToneMapping = FIBITMAP* function( FIBITMAP* dib, FREE_IMAGE_TMO tmo, double first_param = 0, double second_param = 0 );
-    alias da_FreeImage_TmoDrago03 = FIBITMAP* function( FIBITMAP* src, double gamma = 2.2, double exposure = 0 );
-    alias da_FreeImage_TmoReinhard05 = FIBITMAP* function( FIBITMAP* src, double intensity = 0, double contrast = 0 );
-    alias da_FreeImage_TmoReinhard05Ex = FIBITMAP* function( FIBITMAP* src, double intensity = 0, double contrast = 0, double adaptation = 1, double color_correction = 0 );
+    alias da_FreeImage_ToneMapping = FIBITMAP* function(FIBITMAP* dib, FREE_IMAGE_TMO tmo, double first_param = 0, double second_param = 0);
+    alias da_FreeImage_TmoDrago03 = FIBITMAP* function(FIBITMAP* src, double gamma = 2.2, double exposure = 0);
+    alias da_FreeImage_TmoReinhard05 = FIBITMAP* function(FIBITMAP* src, double intensity = 0, double contrast = 0);
+    alias da_FreeImage_TmoReinhard05Ex = FIBITMAP* function(FIBITMAP* src, double intensity = 0, double contrast = 0, double adaptation = 1, double color_correction = 0);
 
-    alias da_FreeImage_TmoFattal02 = FIBITMAP* function( FIBITMAP* src, double color_saturation = 0.5, double attenuation = 0.85 );
+    alias da_FreeImage_TmoFattal02 = FIBITMAP* function(FIBITMAP* src, double color_saturation = 0.5, double attenuation = 0.85);
 
-    alias da_FreeImage_ZLibCompress = DWORD function( BYTE* target, DWORD target_size, BYTE* source, DWORD source_size );
-    alias da_FreeImage_ZLibUncompress = DWORD function( BYTE* target, DWORD target_size, BYTE* source, DWORD source_size );
-    alias da_FreeImage_ZLibGZip = DWORD function( BYTE* target, DWORD target_size, BYTE* source, DWORD source_size );
-    alias da_FreeImage_ZLibGUnzip = DWORD function( BYTE* target, DWORD target_size, BYTE* source, DWORD source_size );
-    alias da_FreeImage_ZLibCRC32 = DWORD function( DWORD crc, BYTE* source, DWORD source_size );
+    alias da_FreeImage_ZLibCompress = DWORD function(BYTE* target, DWORD target_size, BYTE* source, DWORD source_size);
+    alias da_FreeImage_ZLibUncompress = DWORD function(BYTE* target, DWORD target_size, BYTE* source, DWORD source_size);
+    alias da_FreeImage_ZLibGZip = DWORD function(BYTE* target, DWORD target_size, BYTE* source, DWORD source_size);
+    alias da_FreeImage_ZLibGUnzip = DWORD function(BYTE* target, DWORD target_size, BYTE* source, DWORD source_size);
+    alias da_FreeImage_ZLibCRC32 = DWORD function(DWORD crc, BYTE* source, DWORD source_size);
 
     alias da_FreeImage_CreateTag = FITAG* function();
-    alias da_FreeImage_DeleteTag = void function( FITAG* tag );
-    alias da_FreeImage_CloneTag = FITAG* function( FITAG* tag );
+    alias da_FreeImage_DeleteTag = void function(FITAG* tag);
+    alias da_FreeImage_CloneTag = FITAG* function(FITAG* tag);
 
-    alias da_FreeImage_GetTagKey = const( char )* function( FITAG* tag );
-    alias da_FreeImage_GetTagDescription = const( char )* function( FITAG* tag );
-    alias da_FreeImage_GetTagID = WORD function( FITAG* tag );
-    alias da_FreeImage_GetTagType = FREE_IMAGE_MDTYPE function( FITAG* tag );
-    alias da_FreeImage_GetTagCount = DWORD function( FITAG* tag );
-    alias da_FreeImage_GetTagLength = DWORD function( FITAG* tag );
-    alias da_FreeImage_GetTagValue = const( void )* function( FITAG* tag );
+    alias da_FreeImage_GetTagKey = const(char)* function(FITAG* tag);
+    alias da_FreeImage_GetTagDescription = const(char)* function(FITAG* tag);
+    alias da_FreeImage_GetTagID = WORD function(FITAG* tag);
+    alias da_FreeImage_GetTagType = FREE_IMAGE_MDTYPE function(FITAG* tag);
+    alias da_FreeImage_GetTagCount = DWORD function(FITAG* tag);
+    alias da_FreeImage_GetTagLength = DWORD function(FITAG* tag);
+    alias da_FreeImage_GetTagValue = const(void)* function(FITAG* tag);
 
-    alias da_FreeImage_SetTagKey = BOOL function( FITAG* tag, const( char )* key );
-    alias da_FreeImage_SetTagDescription = BOOL function( FITAG* tag, const( char )* description );
-    alias da_FreeImage_SetTagID = BOOL function( FITAG* tag, WORD id );
-    alias da_FreeImage_SetTagType = BOOL function( FITAG* tag, FREE_IMAGE_MDTYPE type );
-    alias da_FreeImage_SetTagCount = BOOL function( FITAG* tag, DWORD count );
-    alias da_FreeImage_SetTagLength = BOOL function( FITAG* tag, DWORD length );
-    alias da_FreeImage_SetTagValue = BOOL function( FITAG* tag, const( void )* value );
+    alias da_FreeImage_SetTagKey = BOOL function(FITAG* tag, const(char)* key);
+    alias da_FreeImage_SetTagDescription = BOOL function(FITAG* tag, const(char)* description);
+    alias da_FreeImage_SetTagID = BOOL function(FITAG* tag, WORD id);
+    alias da_FreeImage_SetTagType = BOOL function(FITAG* tag, FREE_IMAGE_MDTYPE type);
+    alias da_FreeImage_SetTagCount = BOOL function(FITAG* tag, DWORD count);
+    alias da_FreeImage_SetTagLength = BOOL function(FITAG* tag, DWORD length);
+    alias da_FreeImage_SetTagValue = BOOL function(FITAG* tag, const(void)* value);
 
-    alias da_FreeImage_FindFirstMetadata = FIMETADATA* function( FREE_IMAGE_MDMODEL model, FIBITMAP* dib, FITAG** tag );
-    alias da_FreeImage_FindNextMetadata = BOOL function( FIMETADATA* mdhandle, FITAG** tag );
-    alias da_FreeImage_FindCloseMetadata = void function( FIMETADATA* mdhandle );
+    alias da_FreeImage_FindFirstMetadata = FIMETADATA* function(FREE_IMAGE_MDMODEL model, FIBITMAP* dib, FITAG** tag);
+    alias da_FreeImage_FindNextMetadata = BOOL function(FIMETADATA* mdhandle, FITAG** tag);
+    alias da_FreeImage_FindCloseMetadata = void function(FIMETADATA* mdhandle);
 
-    alias da_FreeImage_SetMetadata = BOOL function( FREE_IMAGE_MDMODEL model, FIBITMAP* dib, const( char )* key, FITAG* tag );
-    alias da_FreeImage_GetMetadata = BOOL function( FREE_IMAGE_MDMODEL model, FIBITMAP* dib, const( char )* key, FITAG** tag );
-    alias da_FreeImage_SetMetadataKeyValue = BOOL function( FREE_IMAGE_MDMODEL,FIBITMAP*,const( char )*,const( char )* ); // Added in 3.17.0
+    alias da_FreeImage_SetMetadata = BOOL function(FREE_IMAGE_MDMODEL model, FIBITMAP* dib, const(char)* key, FITAG* tag);
+    alias da_FreeImage_GetMetadata = BOOL function(FREE_IMAGE_MDMODEL model, FIBITMAP* dib, const(char)* key, FITAG** tag);
+    alias da_FreeImage_SetMetadataKeyValue = BOOL function(FREE_IMAGE_MDMODEL,FIBITMAP*,const(char)*,const(char)*); // Added in 3.17.0
 
-    alias da_FreeImage_GetMetadataCount = uint function( FREE_IMAGE_MDMODEL model, FIBITMAP* dib );
-    alias da_FreeImage_CloneMetadata = BOOL function( FIBITMAP* dst, FIBITMAP* src );
+    alias da_FreeImage_GetMetadataCount = uint function(FREE_IMAGE_MDMODEL model, FIBITMAP* dib);
+    alias da_FreeImage_CloneMetadata = BOOL function(FIBITMAP* dst, FIBITMAP* src);
 
-    alias da_FreeImage_TagToString = const( char )* function( FREE_IMAGE_MDMODEL model, FITAG* tag, char* Make = null );
+    alias da_FreeImage_TagToString = const(char)* function(FREE_IMAGE_MDMODEL model, FITAG* tag, char* Make = null);
 
-    alias da_FreeImage_JPEGTransform = BOOL function( const( char )* src_file, const( char )* dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect=TRUE );
-    alias da_FreeImage_JPEGTransformU = BOOL function( const( wchar_t )* src_file, const( wchar_t )* dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect=TRUE );
-    alias da_FreeImage_JPEGCrop = BOOL function( const( char )* src_file, const( char )* dst_file, int left, int top, int right, int bottom );
-    alias da_FreeImage_JPEGCropU = BOOL function( const( wchar_t )* src_file, const( wchar_t )* dst_file, int left, int top, int right, int bottom );
+    alias da_FreeImage_JPEGTransform = BOOL function(const(char)* src_file, const(char)* dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect=TRUE);
+    alias da_FreeImage_JPEGTransformU = BOOL function(const(wchar_t)* src_file, const(wchar_t)* dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect=TRUE);
+    alias da_FreeImage_JPEGCrop = BOOL function(const(char)* src_file, const(char)* dst_file, int left, int top, int right, int bottom);
+    alias da_FreeImage_JPEGCropU = BOOL function(const(wchar_t)* src_file, const(wchar_t)* dst_file, int left, int top, int right, int bottom);
 
     // FreeImage 3.16.0 -- 4 functions
-    alias da_FreeImage_JPEGTransformFromHandle = BOOL function( FreeImageIO*,fi_handle,FreeImageIO*,fi_handle,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE );
-    alias da_FreeImage_JPEGTransformCombined = BOOL function( const(char)*,const(char)*,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE );
-    alias da_FreeImage_JPEGTransformCombinedU = BOOL function( const(wchar_t)*,const(wchar_t)*,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE );
-    alias da_FreeImage_JPEGTransformCombinedFromMemory = BOOL function( FIMEMORY*,FIMEMORY*,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE );
+    alias da_FreeImage_JPEGTransformFromHandle = BOOL function(FreeImageIO*,fi_handle,FreeImageIO*,fi_handle,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE);
+    alias da_FreeImage_JPEGTransformCombined = BOOL function(const(char)*,const(char)*,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE);
+    alias da_FreeImage_JPEGTransformCombinedU = BOOL function(const(wchar_t)*,const(wchar_t)*,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE);
+    alias da_FreeImage_JPEGTransformCombinedFromMemory = BOOL function(FIMEMORY*,FIMEMORY*,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE);
 
-    alias da_FreeImage_RotateClassic = FIBITMAP* function( FIBITMAP* dib, double angle );
-    alias da_FreeImage_Rotate = FIBITMAP* function( FIBITMAP* dib, double angle, const( void* ) bkcolor = null );
-    alias da_FreeImage_RotateEx = FIBITMAP* function( FIBITMAP* dib, double angle, double x_shift, double y_shift, double x_origin, double y_origin, BOOL use_mask );
-    alias da_FreeImage_FlipHorizontal = BOOL function( FIBITMAP* dib );
-    alias da_FreeImage_FlipVertical = BOOL function( FIBITMAP* dib );
+    alias da_FreeImage_RotateClassic = FIBITMAP* function(FIBITMAP* dib, double angle);
+    alias da_FreeImage_Rotate = FIBITMAP* function(FIBITMAP* dib, double angle, const(void*) bkcolor = null);
+    alias da_FreeImage_RotateEx = FIBITMAP* function(FIBITMAP* dib, double angle, double x_shift, double y_shift, double x_origin, double y_origin, BOOL use_mask);
+    alias da_FreeImage_FlipHorizontal = BOOL function(FIBITMAP* dib);
+    alias da_FreeImage_FlipVertical = BOOL function(FIBITMAP* dib);
 
-    alias da_FreeImage_Rescale = FIBITMAP* function( FIBITMAP* dib, int dst_width, int dst_height, FREE_IMAGE_FILTER filter );
-    alias da_FreeImage_MakeThumbnail = FIBITMAP* function( FIBITMAP* dib, int max_pixel_size, BOOL convert = TRUE );
-    alias da_FreeImage_RescaleRect = FIBITMAP* function( FIBITMAP*,int,int,int,int,int,int,FREE_IMAGE_FILTER filter = FILTER_CATMULLROM,uint flags = 0 ); // Added in 3.17.0
+    alias da_FreeImage_Rescale = FIBITMAP* function(FIBITMAP* dib, int dst_width, int dst_height, FREE_IMAGE_FILTER filter);
+    alias da_FreeImage_MakeThumbnail = FIBITMAP* function(FIBITMAP* dib, int max_pixel_size, BOOL convert = TRUE);
+    alias da_FreeImage_RescaleRect = FIBITMAP* function(FIBITMAP*,int,int,int,int,int,int,FREE_IMAGE_FILTER filter = FILTER_CATMULLROM,uint flags = 0); // Added in 3.17.0
 
-    alias da_FreeImage_AdjustCurve = BOOL function( FIBITMAP* dib, BYTE* LUT, FREE_IMAGE_COLOR_CHANNEL channel );
-    alias da_FreeImage_AdjustGamma = BOOL function( FIBITMAP* dib, double gamma );
-    alias da_FreeImage_AdjustBrightness = BOOL function( FIBITMAP* dib, double percentage );
-    alias da_FreeImage_AdjustContrast = BOOL function( FIBITMAP* dib, double percentage );
-    alias da_FreeImage_Invert = BOOL function( FIBITMAP* dib );
-    alias da_FreeImage_GetHistogram = BOOL function( FIBITMAP* dib, DWORD* histo, FREE_IMAGE_COLOR_CHANNEL channel = FICC_BLACK );
-    alias da_FreeImage_GetAdjustColorsLookupTable = int function( BYTE* LUT, double brightness, double contrast, double gamma, BOOL invert );
-    alias da_FreeImage_AdjustColors = BOOL function( FIBITMAP* dib, double brightness, double contrast, double gamma, BOOL invert = FALSE );
-    alias da_FreeImage_ApplyColorMapping = uint function( FIBITMAP* dib, RGBQUAD* srccolors, RGBQUAD* dstcolors, uint count, BOOL ignore_alpha, BOOL swap );
-    alias da_FreeImage_SwapColors = uint function( FIBITMAP* dib, RGBQUAD* color_a, RGBQUAD* color_b, BOOL ignore_alpha );
-    alias da_FreeImage_ApplyPaletteIndexMapping = uint function( FIBITMAP* dib, BYTE* srcindices,   BYTE* dstindices, uint count, BOOL swap );
-    alias da_FreeImage_SwapPaletteIndices = uint function( FIBITMAP* dib, BYTE* index_a, BYTE* index_b );
+    alias da_FreeImage_AdjustCurve = BOOL function(FIBITMAP* dib, BYTE* LUT, FREE_IMAGE_COLOR_CHANNEL channel);
+    alias da_FreeImage_AdjustGamma = BOOL function(FIBITMAP* dib, double gamma);
+    alias da_FreeImage_AdjustBrightness = BOOL function(FIBITMAP* dib, double percentage);
+    alias da_FreeImage_AdjustContrast = BOOL function(FIBITMAP* dib, double percentage);
+    alias da_FreeImage_Invert = BOOL function(FIBITMAP* dib);
+    alias da_FreeImage_GetHistogram = BOOL function(FIBITMAP* dib, DWORD* histo, FREE_IMAGE_COLOR_CHANNEL channel = FICC_BLACK);
+    alias da_FreeImage_GetAdjustColorsLookupTable = int function(BYTE* LUT, double brightness, double contrast, double gamma, BOOL invert);
+    alias da_FreeImage_AdjustColors = BOOL function(FIBITMAP* dib, double brightness, double contrast, double gamma, BOOL invert = FALSE);
+    alias da_FreeImage_ApplyColorMapping = uint function(FIBITMAP* dib, RGBQUAD* srccolors, RGBQUAD* dstcolors, uint count, BOOL ignore_alpha, BOOL swap);
+    alias da_FreeImage_SwapColors = uint function(FIBITMAP* dib, RGBQUAD* color_a, RGBQUAD* color_b, BOOL ignore_alpha);
+    alias da_FreeImage_ApplyPaletteIndexMapping = uint function(FIBITMAP* dib, BYTE* srcindices,   BYTE* dstindices, uint count, BOOL swap);
+    alias da_FreeImage_SwapPaletteIndices = uint function(FIBITMAP* dib, BYTE* index_a, BYTE* index_b);
 
-    alias da_FreeImage_GetChannel = FIBITMAP* function( FIBITMAP* dib, FREE_IMAGE_COLOR_CHANNEL channel );
-    alias da_FreeImage_SetChannel = BOOL function( FIBITMAP*dst, FIBITMAP*src, FREE_IMAGE_COLOR_CHANNEL channel );
-    alias da_FreeImage_GetComplexChannel = FIBITMAP* function( FIBITMAP*src, FREE_IMAGE_COLOR_CHANNEL channel );
-    alias da_FreeImage_SetComplexChannel = BOOL function( FIBITMAP*dst, FIBITMAP*src, FREE_IMAGE_COLOR_CHANNEL channel );
+    alias da_FreeImage_GetChannel = FIBITMAP* function(FIBITMAP* dib, FREE_IMAGE_COLOR_CHANNEL channel);
+    alias da_FreeImage_SetChannel = BOOL function(FIBITMAP*dst, FIBITMAP*src, FREE_IMAGE_COLOR_CHANNEL channel);
+    alias da_FreeImage_GetComplexChannel = FIBITMAP* function(FIBITMAP*src, FREE_IMAGE_COLOR_CHANNEL channel);
+    alias da_FreeImage_SetComplexChannel = BOOL function(FIBITMAP*dst, FIBITMAP*src, FREE_IMAGE_COLOR_CHANNEL channel);
 
-    alias da_FreeImage_Copy = FIBITMAP* function( FIBITMAP* dib, int left, int top, int right, int bottom );
-    alias da_FreeImage_Paste = BOOL function( FIBITMAP*dst, FIBITMAP*src, int left, int top, int alpha );
-    alias da_FreeImage_CreateView = FIBITMAP* function( FIBITMAP*,uint,uint,uint,uint ); // Added in 3.17.0
+    alias da_FreeImage_Copy = FIBITMAP* function(FIBITMAP* dib, int left, int top, int right, int bottom);
+    alias da_FreeImage_Paste = BOOL function(FIBITMAP*dst, FIBITMAP*src, int left, int top, int alpha);
+    alias da_FreeImage_CreateView = FIBITMAP* function(FIBITMAP*,uint,uint,uint,uint); // Added in 3.17.0
 
-    alias da_FreeImage_Composite = FIBITMAP* function( FIBITMAP*fg, BOOL useFileBkg = FALSE, RGBQUAD* appBkColor = null, FIBITMAP*bg = null );
-    alias da_FreeImage_PreMultiplyWithAlpha = BOOL function( FIBITMAP* dib );
+    alias da_FreeImage_Composite = FIBITMAP* function(FIBITMAP*fg, BOOL useFileBkg = FALSE, RGBQUAD* appBkColor = null, FIBITMAP*bg = null);
+    alias da_FreeImage_PreMultiplyWithAlpha = BOOL function(FIBITMAP* dib);
 
-    alias da_FreeImage_FillBackground = BOOL function( FIBITMAP* dib, const( void* ) color, int options = 0 );
-    alias da_FreeImage_EnlargeCanvas = FIBITMAP* function( FIBITMAP*src, int left, int top, int right, int bottom, const( void* ) color, int options = 0 );
-    alias da_FreeImage_AllocateEx = FIBITMAP* function( int width, int height, int bpp, const( RGBQUAD )* color, int options = 0, const( RGBQUAD )* palette = null, uint red_mask = 0, uint green_mask = 0, uint blue_mask = 0 );
-    alias da_FreeImage_AllocateExT = FIBITMAP* function( FREE_IMAGE_TYPE type, int width, int height, int bpp, const( void* ) color, int options = 0, const( RGBQUAD )* palette = null, uint red_mask = 0, uint green_mask = 0, uint blue_mask = 0 );
+    alias da_FreeImage_FillBackground = BOOL function(FIBITMAP* dib, const(void*) color, int options = 0);
+    alias da_FreeImage_EnlargeCanvas = FIBITMAP* function(FIBITMAP*src, int left, int top, int right, int bottom, const(void*) color, int options = 0);
+    alias da_FreeImage_AllocateEx = FIBITMAP* function(int width, int height, int bpp, const(RGBQUAD)* color, int options = 0, const(RGBQUAD)* palette = null, uint red_mask = 0, uint green_mask = 0, uint blue_mask = 0);
+    alias da_FreeImage_AllocateExT = FIBITMAP* function(FREE_IMAGE_TYPE type, int width, int height, int bpp, const(void*) color, int options = 0, const(RGBQUAD)* palette = null, uint red_mask = 0, uint green_mask = 0, uint blue_mask = 0);
 
-    alias da_FreeImage_MultigridPoissonSolver = FIBITMAP* function( FIBITMAP*Laplacian, int ncycle = 3 );
+    alias da_FreeImage_MultigridPoissonSolver = FIBITMAP* function(FIBITMAP*Laplacian, int ncycle = 3);
 }
 
 __gshared {
@@ -365,7 +366,7 @@ __gshared {
     da_FreeImage_SaveMultiBitmapToMemory FreeImage_SaveMultiBitmapToMemory;
     da_FreeImage_RegisterLocalPlugin FreeImage_RegisterLocalPlugin;
 
-    static if ( Derelict_OS_Windows )
+    static if (Derelict_OS_Windows)
         da_FreeImage_RegisterExternalPlugin FreeImage_RegisterExternalPlugin;
 
     da_FreeImage_GetFIFCount FreeImage_GetFIFCount;
@@ -583,3 +584,263 @@ __gshared {
     da_FreeImage_AllocateExT FreeImage_AllocateExT;
     da_FreeImage_MultigridPoissonSolver FreeImage_MultigridPoissonSolver;
 }
+
+package:
+    void loadFuncs(SharedLibLoader loader)
+    {
+        with(loader)
+        {
+            bindFunc_stdcall(FreeImage_Initialise, "FreeImage_Initialise");
+            bindFunc_stdcall(FreeImage_DeInitialise, "FreeImage_DeInitialise");
+            bindFunc_stdcall(FreeImage_GetVersion, "FreeImage_GetVersion");
+            bindFunc_stdcall(FreeImage_GetCopyrightMessage, "FreeImage_GetCopyrightMessage");
+            bindFunc_stdcall(FreeImage_SetOutputMessageStdCall, "FreeImage_SetOutputMessageStdCall");
+            bindFunc_stdcall(FreeImage_SetOutputMessage, "FreeImage_SetOutputMessage");
+
+            // This one isn't mangled like the rest, likely because of the variable args.
+            bindFunc(cast(void**)&FreeImage_OutputMessageProc, "FreeImage_OutputMessageProc");
+
+            bindFunc_stdcall(FreeImage_Allocate, "FreeImage_Allocate");
+            bindFunc_stdcall(FreeImage_AllocateT, "FreeImage_AllocateT");
+            bindFunc_stdcall(FreeImage_Clone, "FreeImage_Clone");
+            bindFunc_stdcall(FreeImage_Unload, "FreeImage_Unload");
+            bindFunc_stdcall(FreeImage_HasPixels, "FreeImage_HasPixels");
+            bindFunc_stdcall(FreeImage_Load, "FreeImage_Load");
+            bindFunc_stdcall(FreeImage_LoadU, "FreeImage_LoadU");
+            bindFunc_stdcall(FreeImage_LoadFromHandle, "FreeImage_LoadFromHandle");
+            bindFunc_stdcall(FreeImage_Save, "FreeImage_Save");
+            bindFunc_stdcall(FreeImage_SaveU, "FreeImage_SaveU");
+            bindFunc_stdcall(FreeImage_SaveToHandle, "FreeImage_SaveToHandle");
+            bindFunc_stdcall(FreeImage_OpenMemory, "FreeImage_OpenMemory");
+            bindFunc_stdcall(FreeImage_CloseMemory, "FreeImage_CloseMemory");
+            bindFunc_stdcall(FreeImage_LoadFromMemory, "FreeImage_LoadFromMemory");
+            bindFunc_stdcall(FreeImage_SaveToMemory, "FreeImage_SaveToMemory");
+            bindFunc_stdcall(FreeImage_TellMemory, "FreeImage_TellMemory");
+            bindFunc_stdcall(FreeImage_SeekMemory, "FreeImage_SeekMemory");
+            bindFunc_stdcall(FreeImage_AcquireMemory, "FreeImage_AcquireMemory");
+            bindFunc_stdcall(FreeImage_ReadMemory, "FreeImage_ReadMemory");
+            bindFunc_stdcall(FreeImage_WriteMemory, "FreeImage_WriteMemory");
+            bindFunc_stdcall(FreeImage_LoadMultiBitmapFromMemory, "FreeImage_LoadMultiBitmapFromMemory");
+            bindFunc_stdcall(FreeImage_SaveMultiBitmapToMemory, "FreeImage_SaveMultiBitmapToMemory");
+            bindFunc_stdcall(FreeImage_RegisterLocalPlugin, "FreeImage_RegisterLocalPlugin");
+
+            static if (Derelict_OS_Windows)
+                bindFunc_stdcall(FreeImage_RegisterExternalPlugin, "FreeImage_RegisterExternalPlugin");
+
+            bindFunc_stdcall(FreeImage_GetFIFCount, "FreeImage_GetFIFCount");
+            bindFunc_stdcall(FreeImage_SetPluginEnabled, "FreeImage_SetPluginEnabled");
+            bindFunc_stdcall(FreeImage_IsPluginEnabled, "FreeImage_IsPluginEnabled");
+            bindFunc_stdcall(FreeImage_GetFIFFromFormat, "FreeImage_GetFIFFromFormat");
+            bindFunc_stdcall(FreeImage_GetFIFFromMime, "FreeImage_GetFIFFromMime");
+            bindFunc_stdcall(FreeImage_GetFormatFromFIF, "FreeImage_GetFormatFromFIF");
+            bindFunc_stdcall(FreeImage_GetFIFExtensionList, "FreeImage_GetFIFExtensionList");
+            bindFunc_stdcall(FreeImage_GetFIFDescription, "FreeImage_GetFIFDescription");
+            bindFunc_stdcall(FreeImage_GetFIFRegExpr, "FreeImage_GetFIFRegExpr");
+            bindFunc_stdcall(FreeImage_GetFIFMimeType, "FreeImage_GetFIFMimeType");
+            bindFunc_stdcall(FreeImage_GetFIFFromFilename, "FreeImage_GetFIFFromFilename");
+            bindFunc_stdcall(FreeImage_GetFIFFromFilenameU, "FreeImage_GetFIFFromFilenameU");
+            bindFunc_stdcall(FreeImage_FIFSupportsReading, "FreeImage_FIFSupportsReading");
+            bindFunc_stdcall(FreeImage_FIFSupportsWriting, "FreeImage_FIFSupportsWriting");
+            bindFunc_stdcall(FreeImage_FIFSupportsExportBPP, "FreeImage_FIFSupportsExportBPP");
+            bindFunc_stdcall(FreeImage_FIFSupportsExportType, "FreeImage_FIFSupportsExportType");
+            bindFunc_stdcall(FreeImage_FIFSupportsICCProfiles, "FreeImage_FIFSupportsICCProfiles");
+            bindFunc_stdcall(FreeImage_FIFSupportsNoPixels, "FreeImage_FIFSupportsNoPixels");
+            bindFunc_stdcall(FreeImage_OpenMultiBitmap, "FreeImage_OpenMultiBitmap");
+            bindFunc_stdcall(FreeImage_OpenMultiBitmapFromHandle, "FreeImage_OpenMultiBitmapFromHandle");
+            bindFunc_stdcall(FreeImage_SaveMultiBitmapToHandle, "FreeImage_SaveMultiBitmapToHandle");
+            bindFunc_stdcall(FreeImage_CloseMultiBitmap, "FreeImage_CloseMultiBitmap");
+            bindFunc_stdcall(FreeImage_GetPageCount, "FreeImage_GetPageCount");
+            bindFunc_stdcall(FreeImage_AppendPage, "FreeImage_AppendPage");
+            bindFunc_stdcall(FreeImage_InsertPage, "FreeImage_InsertPage");
+            bindFunc_stdcall(FreeImage_DeletePage, "FreeImage_DeletePage");
+            bindFunc_stdcall(FreeImage_LockPage, "FreeImage_LockPage");
+            bindFunc_stdcall(FreeImage_UnlockPage, "FreeImage_UnlockPage");
+            bindFunc_stdcall(FreeImage_MovePage, "FreeImage_MovePage");
+            bindFunc_stdcall(FreeImage_GetLockedPageNumbers, "FreeImage_GetLockedPageNumbers");
+            bindFunc_stdcall(FreeImage_GetFileType, "FreeImage_GetFileType");
+            bindFunc_stdcall(FreeImage_GetFileTypeU, "FreeImage_GetFileTypeU");
+            bindFunc_stdcall(FreeImage_GetFileTypeFromHandle, "FreeImage_GetFileTypeFromHandle");
+            bindFunc_stdcall(FreeImage_GetFileTypeFromMemory, "FreeImage_GetFileTypeFromMemory");
+            bindFunc_stdcall(FreeImage_GetImageType, "FreeImage_GetImageType");
+            bindFunc_stdcall(FreeImage_IsLittleEndian, "FreeImage_IsLittleEndian");
+            bindFunc_stdcall(FreeImage_LookupX11Color, "FreeImage_LookupX11Color");
+            bindFunc_stdcall(FreeImage_LookupSVGColor, "FreeImage_LookupSVGColor");
+            bindFunc_stdcall(FreeImage_GetBits, "FreeImage_GetBits");
+            bindFunc_stdcall(FreeImage_GetScanLine, "FreeImage_GetScanLine");
+            bindFunc_stdcall(FreeImage_GetPixelIndex, "FreeImage_GetPixelIndex");
+            bindFunc_stdcall(FreeImage_GetPixelColor, "FreeImage_GetPixelColor");
+            bindFunc_stdcall(FreeImage_SetPixelIndex, "FreeImage_SetPixelIndex");
+            bindFunc_stdcall(FreeImage_SetPixelColor, "FreeImage_SetPixelColor");
+            bindFunc_stdcall(FreeImage_GetColorsUsed, "FreeImage_GetColorsUsed");
+            bindFunc_stdcall(FreeImage_GetBPP, "FreeImage_GetBPP");
+            bindFunc_stdcall(FreeImage_GetWidth, "FreeImage_GetWidth");
+            bindFunc_stdcall(FreeImage_GetHeight, "FreeImage_GetHeight");
+            bindFunc_stdcall(FreeImage_GetLine, "FreeImage_GetLine");
+            bindFunc_stdcall(FreeImage_GetPitch, "FreeImage_GetPitch");
+            bindFunc_stdcall(FreeImage_GetDIBSize, "FreeImage_GetDIBSize");
+            bindFunc_stdcall(FreeImage_GetMemorySize, "FreeImage_GetMemorySize");
+            bindFunc_stdcall(FreeImage_GetPalette, "FreeImage_GetPalette");
+            bindFunc_stdcall(FreeImage_GetDotsPerMeterX, "FreeImage_GetDotsPerMeterX");
+            bindFunc_stdcall(FreeImage_GetDotsPerMeterY, "FreeImage_GetDotsPerMeterY");
+            bindFunc_stdcall(FreeImage_SetDotsPerMeterX, "FreeImage_SetDotsPerMeterX");
+            bindFunc_stdcall(FreeImage_SetDotsPerMeterY, "FreeImage_SetDotsPerMeterY");
+            bindFunc_stdcall(FreeImage_GetInfoHeader, "FreeImage_GetInfoHeader");
+            bindFunc_stdcall(FreeImage_GetInfo, "FreeImage_GetInfo");
+            bindFunc_stdcall(FreeImage_GetColorType, "FreeImage_GetColorType");
+            bindFunc_stdcall(FreeImage_GetRedMask, "FreeImage_GetRedMask");
+            bindFunc_stdcall(FreeImage_GetGreenMask, "FreeImage_GetGreenMask");
+            bindFunc_stdcall(FreeImage_GetBlueMask, "FreeImage_GetBlueMask");
+            bindFunc_stdcall(FreeImage_GetTransparencyCount, "FreeImage_GetTransparencyCount");
+            bindFunc_stdcall(FreeImage_GetTransparencyTable, "FreeImage_GetTransparencyTable");
+            bindFunc_stdcall(FreeImage_SetTransparent, "FreeImage_SetTransparent");
+            bindFunc_stdcall(FreeImage_SetTransparencyTable, "FreeImage_SetTransparencyTable");
+            bindFunc_stdcall(FreeImage_IsTransparent, "FreeImage_IsTransparent");
+            bindFunc_stdcall(FreeImage_SetTransparentIndex, "FreeImage_SetTransparentIndex");
+            bindFunc_stdcall(FreeImage_GetTransparentIndex, "FreeImage_GetTransparentIndex");
+            bindFunc_stdcall(FreeImage_HasBackgroundColor, "FreeImage_HasBackgroundColor");
+            bindFunc_stdcall(FreeImage_GetBackgroundColor, "FreeImage_GetBackgroundColor");
+            bindFunc_stdcall(FreeImage_SetBackgroundColor, "FreeImage_SetBackgroundColor");
+            bindFunc_stdcall(FreeImage_GetThumbnail, "FreeImage_GetThumbnail");
+            bindFunc_stdcall(FreeImage_SetThumbnail, "FreeImage_SetThumbnail");
+            bindFunc_stdcall(FreeImage_GetICCProfile, "FreeImage_GetICCProfile");
+            bindFunc_stdcall(FreeImage_CreateICCProfile, "FreeImage_CreateICCProfile");
+            bindFunc_stdcall(FreeImage_DestroyICCProfile, "FreeImage_DestroyICCProfile");
+            bindFunc_stdcall(FreeImage_ConvertLine1To4, "FreeImage_ConvertLine1To4");
+            bindFunc_stdcall(FreeImage_ConvertLine8To4, "FreeImage_ConvertLine8To4");
+            bindFunc_stdcall(FreeImage_ConvertLine16To4_555, "FreeImage_ConvertLine16To4_555");
+            bindFunc_stdcall(FreeImage_ConvertLine16To4_565, "FreeImage_ConvertLine16To4_565");
+            bindFunc_stdcall(FreeImage_ConvertLine24To4, "FreeImage_ConvertLine24To4");
+            bindFunc_stdcall(FreeImage_ConvertLine32To4, "FreeImage_ConvertLine32To4");
+            bindFunc_stdcall(FreeImage_ConvertLine1To8, "FreeImage_ConvertLine1To8");
+            bindFunc_stdcall(FreeImage_ConvertLine4To8, "FreeImage_ConvertLine4To8");
+            bindFunc_stdcall(FreeImage_ConvertLine16To8_555, "FreeImage_ConvertLine16To8_555");
+            bindFunc_stdcall(FreeImage_ConvertLine16To8_565, "FreeImage_ConvertLine16To8_565");
+            bindFunc_stdcall(FreeImage_ConvertLine24To8, "FreeImage_ConvertLine24To8");
+            bindFunc_stdcall(FreeImage_ConvertLine32To8, "FreeImage_ConvertLine32To8");
+            bindFunc_stdcall(FreeImage_ConvertLine1To16_555, "FreeImage_ConvertLine1To16_555");
+            bindFunc_stdcall(FreeImage_ConvertLine4To16_555, "FreeImage_ConvertLine4To16_555");
+            bindFunc_stdcall(FreeImage_ConvertLine8To16_555, "FreeImage_ConvertLine8To16_555");
+            bindFunc_stdcall(FreeImage_ConvertLine16_565_To16_555, "FreeImage_ConvertLine16_565_To16_555");
+            bindFunc_stdcall(FreeImage_ConvertLine24To16_555, "FreeImage_ConvertLine24To16_555");
+            bindFunc_stdcall(FreeImage_ConvertLine32To16_555, "FreeImage_ConvertLine32To16_555");
+            bindFunc_stdcall(FreeImage_ConvertLine1To16_565, "FreeImage_ConvertLine1To16_565");
+            bindFunc_stdcall(FreeImage_ConvertLine4To16_565, "FreeImage_ConvertLine4To16_565");
+            bindFunc_stdcall(FreeImage_ConvertLine8To16_565, "FreeImage_ConvertLine8To16_565");
+            bindFunc_stdcall(FreeImage_ConvertLine16_555_To16_565, "FreeImage_ConvertLine16_555_To16_565");
+            bindFunc_stdcall(FreeImage_ConvertLine24To16_565, "FreeImage_ConvertLine24To16_565");
+            bindFunc_stdcall(FreeImage_ConvertLine32To16_565, "FreeImage_ConvertLine32To16_565");
+            bindFunc_stdcall(FreeImage_ConvertLine1To24, "FreeImage_ConvertLine1To24");
+            bindFunc_stdcall(FreeImage_ConvertLine4To24, "FreeImage_ConvertLine4To24");
+            bindFunc_stdcall(FreeImage_ConvertLine8To24, "FreeImage_ConvertLine8To24");
+            bindFunc_stdcall(FreeImage_ConvertLine16To24_555, "FreeImage_ConvertLine16To24_555");
+            bindFunc_stdcall(FreeImage_ConvertLine16To24_565, "FreeImage_ConvertLine16To24_565");
+            bindFunc_stdcall(FreeImage_ConvertLine32To24, "FreeImage_ConvertLine32To24");
+            bindFunc_stdcall(FreeImage_ConvertLine1To32, "FreeImage_ConvertLine1To32");
+            bindFunc_stdcall(FreeImage_ConvertLine4To32, "FreeImage_ConvertLine4To32");
+            bindFunc_stdcall(FreeImage_ConvertLine8To32, "FreeImage_ConvertLine8To32");
+            bindFunc_stdcall(FreeImage_ConvertLine16To32_555, "FreeImage_ConvertLine16To32_555");
+            bindFunc_stdcall(FreeImage_ConvertLine16To32_565, "FreeImage_ConvertLine16To32_565");
+            bindFunc_stdcall(FreeImage_ConvertLine24To32, "FreeImage_ConvertLine24To32");
+            bindFunc_stdcall(FreeImage_ConvertTo4Bits, "FreeImage_ConvertTo4Bits");
+            bindFunc_stdcall(FreeImage_ConvertTo8Bits, "FreeImage_ConvertTo8Bits");
+            bindFunc_stdcall(FreeImage_ConvertToGreyscale, "FreeImage_ConvertToGreyscale");
+            bindFunc_stdcall(FreeImage_ConvertTo16Bits555, "FreeImage_ConvertTo16Bits555");
+            bindFunc_stdcall(FreeImage_ConvertTo16Bits565, "FreeImage_ConvertTo16Bits565");
+            bindFunc_stdcall(FreeImage_ConvertTo24Bits, "FreeImage_ConvertTo24Bits");
+            bindFunc_stdcall(FreeImage_ConvertTo32Bits, "FreeImage_ConvertTo32Bits");
+            bindFunc_stdcall(FreeImage_ColorQuantize, "FreeImage_ColorQuantize");
+            bindFunc_stdcall(FreeImage_ColorQuantizeEx, "FreeImage_ColorQuantizeEx");
+            bindFunc_stdcall(FreeImage_Threshold, "FreeImage_Threshold");
+            bindFunc_stdcall(FreeImage_Dither, "FreeImage_Dither");
+            bindFunc_stdcall(FreeImage_ConvertFromRawBits, "FreeImage_ConvertFromRawBits");
+            bindFunc_stdcall(FreeImage_ConvertFromRawBitsEx, "FreeImage_ConvertFromRawBitsEx");
+            bindFunc_stdcall(FreeImage_ConvertToRawBits, "FreeImage_ConvertToRawBits");
+            bindFunc_stdcall(FreeImage_ConvertToFloat, "FreeImage_ConvertToFloat");
+            bindFunc_stdcall(FreeImage_ConvertToRGBF, "FreeImage_ConvertToRGBF");
+            bindFunc_stdcall(FreeImage_ConvertToRGBAF, "FreeImage_ConvertToRGBAF");
+            bindFunc_stdcall(FreeImage_ConvertToUINT16, "FreeImage_ConvertToUINT16");
+            bindFunc_stdcall(FreeImage_ConvertToRGB16, "FreeImage_ConvertToRGB16");
+            bindFunc_stdcall(FreeImage_ConvertToRGBA16, "FreeImage_ConvertToRGBA16");
+            bindFunc_stdcall(FreeImage_ConvertToStandardType, "FreeImage_ConvertToStandardType");
+            bindFunc_stdcall(FreeImage_ConvertToType, "FreeImage_ConvertToType");
+            bindFunc_stdcall(FreeImage_ToneMapping, "FreeImage_ToneMapping");
+            bindFunc_stdcall(FreeImage_TmoDrago03, "FreeImage_TmoDrago03");
+            bindFunc_stdcall(FreeImage_TmoReinhard05, "FreeImage_TmoReinhard05");
+            bindFunc_stdcall(FreeImage_TmoReinhard05Ex, "FreeImage_TmoReinhard05Ex");
+            bindFunc_stdcall(FreeImage_TmoFattal02, "FreeImage_TmoFattal02");
+            bindFunc_stdcall(FreeImage_ZLibCompress, "FreeImage_ZLibCompress");
+            bindFunc_stdcall(FreeImage_ZLibUncompress, "FreeImage_ZLibUncompress");
+            bindFunc_stdcall(FreeImage_ZLibGZip, "FreeImage_ZLibGZip");
+            bindFunc_stdcall(FreeImage_ZLibGUnzip, "FreeImage_ZLibGUnzip");
+            bindFunc_stdcall(FreeImage_ZLibCRC32, "FreeImage_ZLibCRC32");
+
+            bindFunc_stdcall(FreeImage_CreateTag, "FreeImage_CreateTag");
+            bindFunc_stdcall(FreeImage_DeleteTag, "FreeImage_DeleteTag");
+            bindFunc_stdcall(FreeImage_CloneTag, "FreeImage_CloneTag");
+            bindFunc_stdcall(FreeImage_GetTagKey, "FreeImage_GetTagKey");
+            bindFunc_stdcall(FreeImage_GetTagDescription, "FreeImage_GetTagDescription");
+            bindFunc_stdcall(FreeImage_GetTagID, "FreeImage_GetTagID");
+            bindFunc_stdcall(FreeImage_GetTagType, "FreeImage_GetTagType");
+            bindFunc_stdcall(FreeImage_GetTagCount, "FreeImage_GetTagCount");
+            bindFunc_stdcall(FreeImage_GetTagLength, "FreeImage_GetTagLength");
+            bindFunc_stdcall(FreeImage_GetTagValue, "FreeImage_GetTagValue");
+            bindFunc_stdcall(FreeImage_SetTagKey, "FreeImage_SetTagKey");
+            bindFunc_stdcall(FreeImage_SetTagDescription, "FreeImage_SetTagDescription");
+            bindFunc_stdcall(FreeImage_SetTagID, "FreeImage_SetTagID");
+            bindFunc_stdcall(FreeImage_SetTagType, "FreeImage_SetTagType");
+            bindFunc_stdcall(FreeImage_SetTagCount, "FreeImage_SetTagCount");
+            bindFunc_stdcall(FreeImage_SetTagLength, "FreeImage_SetTagLength");
+            bindFunc_stdcall(FreeImage_SetTagValue, "FreeImage_SetTagValue");
+            bindFunc_stdcall(FreeImage_FindFirstMetadata, "FreeImage_FindFirstMetadata");
+            bindFunc_stdcall(FreeImage_FindNextMetadata, "FreeImage_FindNextMetadata");
+            bindFunc_stdcall(FreeImage_FindCloseMetadata, "FreeImage_FindCloseMetadata");
+            bindFunc_stdcall(FreeImage_SetMetadata, "FreeImage_SetMetadata");
+            bindFunc_stdcall(FreeImage_GetMetadata, "FreeImage_GetMetadata");
+            bindFunc_stdcall(FreeImage_SetMetadataKeyValue, "FreeImage_SetMetadataKeyValue");
+            bindFunc_stdcall(FreeImage_GetMetadataCount, "FreeImage_GetMetadataCount");
+            bindFunc_stdcall(FreeImage_CloneMetadata, "FreeImage_CloneMetadata");
+            bindFunc_stdcall(FreeImage_TagToString, "FreeImage_TagToString");
+            bindFunc_stdcall(FreeImage_JPEGTransform, "FreeImage_JPEGTransform");
+            bindFunc_stdcall(FreeImage_JPEGTransformU, "FreeImage_JPEGTransformU");
+            bindFunc_stdcall(FreeImage_JPEGCrop, "FreeImage_JPEGCrop");
+            bindFunc_stdcall(FreeImage_JPEGCropU, "FreeImage_JPEGCropU");
+            bindFunc_stdcall(FreeImage_JPEGTransformFromHandle, "FreeImage_JPEGTransformFromHandle");
+            bindFunc_stdcall(FreeImage_JPEGTransformCombined, "FreeImage_JPEGTransformCombined");
+            bindFunc_stdcall(FreeImage_JPEGTransformCombinedU, "FreeImage_JPEGTransformCombinedU");
+            bindFunc_stdcall(FreeImage_JPEGTransformCombinedFromMemory, "FreeImage_JPEGTransformCombinedFromMemory");
+            bindFunc_stdcall(FreeImage_RotateClassic, "FreeImage_RotateClassic");
+            bindFunc_stdcall(FreeImage_Rotate, "FreeImage_Rotate");
+            bindFunc_stdcall(FreeImage_RotateEx, "FreeImage_RotateEx");
+            bindFunc_stdcall(FreeImage_FlipHorizontal, "FreeImage_FlipHorizontal");
+            bindFunc_stdcall(FreeImage_FlipVertical, "FreeImage_FlipVertical");
+            bindFunc_stdcall(FreeImage_Rescale, "FreeImage_Rescale");
+            bindFunc_stdcall(FreeImage_MakeThumbnail, "FreeImage_MakeThumbnail");
+            bindFunc_stdcall(FreeImage_RescaleRect, "FreeImage_RescaleRect");
+            bindFunc_stdcall(FreeImage_AdjustCurve, "FreeImage_AdjustCurve");
+            bindFunc_stdcall(FreeImage_AdjustGamma, "FreeImage_AdjustGamma");
+            bindFunc_stdcall(FreeImage_AdjustBrightness, "FreeImage_AdjustBrightness");
+            bindFunc_stdcall(FreeImage_AdjustContrast, "FreeImage_AdjustContrast");
+            bindFunc_stdcall(FreeImage_Invert, "FreeImage_Invert");
+            bindFunc_stdcall(FreeImage_GetHistogram, "FreeImage_GetHistogram");
+            bindFunc_stdcall(FreeImage_GetAdjustColorsLookupTable, "FreeImage_GetAdjustColorsLookupTable");
+            bindFunc_stdcall(FreeImage_AdjustColors, "FreeImage_AdjustColors");
+            bindFunc_stdcall(FreeImage_ApplyColorMapping, "FreeImage_ApplyColorMapping");
+            bindFunc_stdcall(FreeImage_SwapColors, "FreeImage_SwapColors");
+            bindFunc_stdcall(FreeImage_ApplyPaletteIndexMapping, "FreeImage_ApplyPaletteIndexMapping");
+            bindFunc_stdcall(FreeImage_SwapPaletteIndices, "FreeImage_SwapPaletteIndices");
+            bindFunc_stdcall(FreeImage_GetChannel, "FreeImage_GetChannel");
+            bindFunc_stdcall(FreeImage_SetChannel, "FreeImage_SetChannel");
+            bindFunc_stdcall(FreeImage_GetComplexChannel, "FreeImage_GetComplexChannel");
+            bindFunc_stdcall(FreeImage_SetComplexChannel, "FreeImage_SetComplexChannel");
+            bindFunc_stdcall(FreeImage_Copy, "FreeImage_Copy");
+            bindFunc_stdcall(FreeImage_Paste, "FreeImage_Paste");
+            bindFunc_stdcall(FreeImage_CreateView, "FreeImage_CreateView");
+            bindFunc_stdcall(FreeImage_Composite, "FreeImage_Composite");
+            bindFunc_stdcall(FreeImage_PreMultiplyWithAlpha, "FreeImage_PreMultiplyWithAlpha");
+            bindFunc_stdcall(FreeImage_FillBackground, "FreeImage_FillBackground");
+            bindFunc_stdcall(FreeImage_EnlargeCanvas, "FreeImage_EnlargeCanvas");
+            bindFunc_stdcall(FreeImage_AllocateEx, "FreeImage_AllocateEx");
+            bindFunc_stdcall(FreeImage_AllocateExT, "FreeImage_AllocateExT");
+            bindFunc_stdcall(FreeImage_MultigridPoissonSolver, "FreeImage_MultigridPoissonSolver");
+        }
+    }
