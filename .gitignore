@@ -1,4 +1,5 @@
 lib
 bin
 .dub
+dub.selections.json
 update.txt
