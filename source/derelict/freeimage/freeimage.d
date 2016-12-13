@@ -55,7 +55,7 @@ class DerelictFILoader : SharedLibLoader {
         super( libNames );
     }
 
-    protected override void configureMinimumVersion( SharedLibVersion minVersion ) {
+    /*protected override void configureMinimumVersion( SharedLibVersion minVersion ) {
         if( minVersion.major == 3 ) {
             if( minVersion.minor == 15 ) {
                 if( minVersion.patch == 4 )
@@ -66,7 +66,7 @@ class DerelictFILoader : SharedLibLoader {
             else if(minVersion.minor == 16 )
                 missingSymbolCallback = &allowFI_3_16_0;
         }
-    }
+    }*/
 
     protected override void loadSymbols() {
         // work-around: names in FreeImage.dll are stdcall-mangled on Windows
