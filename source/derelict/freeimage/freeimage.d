@@ -52,6 +52,7 @@ private {
 
 class DerelictFILoader : SharedLibLoader {
     public this() {
+        this.missingSymbolCallback = &allowFedora;
         super( libNames );
     }
 
@@ -404,13 +405,50 @@ class DerelictFILoader : SharedLibLoader {
                 case "FreeImage_CreateView":
                     return ShouldThrow.No;
             }
-            default: return ShouldThrow.Yes;
+            default: return allowFedora( symbolName );
         }
+    }
+
+    private ShouldThrow allowFedora( string symbolName ) {
+        if( UsingFedoraProject ) {
+            switch( symbolName ) {
+                case "FreeImage_JPEGTransform":
+                case "FreeImage_JPEGTransformU":
+                case "FreeImage_JPEGCrop":
+                case "FreeImage_JPEGCropU":
+                case "FreeImage_JPEGTransformFromHandle":
+                case "FreeImage_JPEGTransformCombined":
+                case "FreeImage_JPEGTransformCombinedU":
+                case "FreeImage_JPEGTransformCombinedFromMemory":
+                    return ShouldThrow.No;
+                default: return ShouldThrow.Yes;
+            }
+        }
+        else
+            return ShouldThrow.Yes;
     }
 }
 
+__gshared bool UsingFedoraProject;
 __gshared DerelictFILoader DerelictFI;
 
 shared static this() {
+    import std.file : exists;
+    enum rhelRelease = "/etc/redhat-release";
+
+    UsingFedoraProject = rhelRelease.exists;
+
     DerelictFI = new DerelictFILoader();
+}
+
+unittest {
+    import std.stdio : writeln;
+
+    writeln("Detected Fedora Project? ", UsingFedoraProject);
+
+    try {
+        DerelictFI.load;
+    } catch(Exception ex) {
+        ex.writeln;
+    }
 }
