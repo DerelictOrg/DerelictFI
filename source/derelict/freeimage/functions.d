@@ -291,7 +291,6 @@ extern(System) @nogc nothrow {
     alias da_FreeImage_JPEGTransformCombinedU = BOOL function(const(wchar_t)*,const(wchar_t)*,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE);
     alias da_FreeImage_JPEGTransformCombinedFromMemory = BOOL function(FIMEMORY*,FIMEMORY*,FREE_IMAGE_JPEG_OPERATION,int*,int*,int*,int*,BOOL perfect=TRUE);
 
-    alias da_FreeImage_RotateClassic = FIBITMAP* function(FIBITMAP* dib, double angle);
     alias da_FreeImage_Rotate = FIBITMAP* function(FIBITMAP* dib, double angle, const(void*) bkcolor = null);
     alias da_FreeImage_RotateEx = FIBITMAP* function(FIBITMAP* dib, double angle, double x_shift, double y_shift, double x_origin, double y_origin, BOOL use_mask);
     alias da_FreeImage_FlipHorizontal = BOOL function(FIBITMAP* dib);
@@ -549,7 +548,6 @@ __gshared {
     da_FreeImage_JPEGTransformCombined FreeImage_JPEGTransformCombined;
     da_FreeImage_JPEGTransformCombinedU FreeImage_JPEGTransformCombinedU;
     da_FreeImage_JPEGTransformCombinedFromMemory FreeImage_JPEGTransformCombinedFromMemory;
-    da_FreeImage_RotateClassic FreeImage_RotateClassic;
     da_FreeImage_Rotate FreeImage_Rotate;
     da_FreeImage_RotateEx FreeImage_RotateEx;
     da_FreeImage_FlipHorizontal FreeImage_FlipHorizontal;
@@ -808,7 +806,6 @@ package:
             bindFunc_stdcall(FreeImage_JPEGTransformCombined, "FreeImage_JPEGTransformCombined");
             bindFunc_stdcall(FreeImage_JPEGTransformCombinedU, "FreeImage_JPEGTransformCombinedU");
             bindFunc_stdcall(FreeImage_JPEGTransformCombinedFromMemory, "FreeImage_JPEGTransformCombinedFromMemory");
-            bindFunc_stdcall(FreeImage_RotateClassic, "FreeImage_RotateClassic");
             bindFunc_stdcall(FreeImage_Rotate, "FreeImage_Rotate");
             bindFunc_stdcall(FreeImage_RotateEx, "FreeImage_RotateEx");
             bindFunc_stdcall(FreeImage_FlipHorizontal, "FreeImage_FlipHorizontal");
